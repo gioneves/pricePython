@@ -1,0 +1,43 @@
+/// change color app
+$(function() {
+
+  $("body").css("background-color","#dd4b3999");
+
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const echartsDivUse = echarts.init(document.getElementById('echartsDiv'));
+  const option = {
+    series: [{
+      type: 'gauge',
+      axisLabel: {
+        fontSize: 22,
+        color: "#242832"
+      },
+      axisLine: {
+          lineStyle: {
+            width: 2,
+            color: [[1, "#242832"]]
+          }
+      },
+      splitLine: {
+          lineStyle: {
+            color: "#242832"
+          }
+      },
+      axisTick: {
+        lineStyle: {
+          color: "#242832"
+        }
+      },
+      data: [{
+        name: 'name1',
+        value: 40,
+        itemStyle: {
+          color: "#f00"
+        }
+      }]
+    }]
+  };
+  echartsDivUse.setOption(option);
+});

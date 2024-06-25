@@ -1,0 +1,3940 @@
+#' The application User-Interface
+#'
+#' @param request Internal parameter for `{shiny}`.
+#'     DO NOT REMOVE.
+#' @import shiny
+#' @import shinyWidgets
+#' @import shiny.i18n
+#' @import rintrojs
+#' @noRd
+
+# EXTERNAL RESOURCES
+golem_add_external_resources <- function() {
+
+  addResourcePath("www", system.file("app/www", package = "beef1"))
+
+  HTML(
+  "<meta name='viewport' content='width=1456'>
+  <title>Autentique-se</title>
+  <link rel='shortcut icon' href='www/favicon.ico'>
+  <link rel='stylesheet' href='www/shiny.css'>
+  <script src='www/shiny.js'></script>
+  <link rel='stylesheet' href='www/swiper-bundle.css'>
+  <script src='www/swiper-bundle.js'></script>
+  <script src='www/autonumeric.js'></script>
+  <script src='www/sweetalert2.js'></script>
+  <link rel='stylesheet' href='www/animate.css'>
+  <script src='www/jquery-ui.js'></script>
+  <link rel='stylesheet' href='www/jquery-ui.css'>
+  <script src='www/jqwidgets.js'></script>
+  <link rel='stylesheet' href='www/select2.min.css'>
+  <script src='www/select2.min.js'></script>
+  <script src='www/popper.min.js'></script>
+  <script src='www/tippy-bundle.umd.js'></script>
+  <link rel='stylesheet' href='www/tippy.css'>
+  <script src='www/jquery.peity.min.js'></script>
+  <script src='www/odometer.js'></script>
+  <link rel='stylesheet' href='www/odometer-theme-default.css'>
+  <script src='www/echarts.min.js'></script>
+  <script src='www/masonry.pkgd.min.js'></script>
+  <script src='www/masonry.pkgd.js'></script>
+  <script src='www/typed.js'></script>
+  <script src='www/nouislider.min.js'></script>
+  <link rel='stylesheet' href='www/nouislider.min.css'>
+  <script src='www/wNumb.min.js'></script>
+  <script src='www/roundslider.min.js'></script>
+  <link rel='stylesheet' href='www/roundslider.min.css'>
+  <script src='www/jquery-thermometer.js'></script>
+  <script src='www/jquery-tube-sign.js'></script>
+  <script src='www/MeterWidget-1.0.js'></script>
+  <script src='www/canvas_utils.js'></script>
+  <link rel='stylesheet' href='www/awn.css'></link>
+  <script src='www/awn.js'></script>"
+  )
+
+}
+
+app_ui <- function(request) {
+
+  # put here all external objects----
+  i18n <- golem::get_golem_options(which = "translator")
+
+  # START TAGLIST----
+  tagList(
+
+    golem_add_external_resources(),
+
+    # START FLUIDPAGE----
+    fluidPage(
+
+      shinyjs::useShinyjs(),
+      shiny.i18n::usei18n(i18n),
+
+      # CALCULADORA----
+      HTML(paste0(
+      '<!--translate calculator-->
+      <div class="elementNone">
+
+      <!--tippy calculator-->
+      <div id="tippyCalcHTML" class="gridClass">
+
+      <div style="grid-column: span 12; margin-bottom: 10px;">
+      <div class="gridClass">
+
+      <!--title-->
+      <div style="grid-column: span 12; font-size: 18px;
+      display: block; margin: auto; position: relative; top: 3px;">
+      <i class="fas fa-circle-info"></i>',
+      i18n$t(" Instructions for use"),
+      '</div>
+
+      <!--hr tippy calculator-->
+      <div style=\'grid-column: span 12;\'>
+      <hr style=\'border-top: 2px solid #49a6de; margin: 10px 0 15px 0;\'>
+      </div>
+
+      <!--content-->
+      <div class="gridTwelveTippy">
+      <i class="fas fa-calculator colorTippyIcon"></i>',
+      i18n$t(" Click on the calculator icon again (or the close button) to close it."),
+      '</div>
+
+      <div class="gridTwelveTippy">
+      <i class="fas fa-square-root-variable colorTippyIcon"></i>',
+      i18n$t(" This calculator only accepts numbers and calculation symbols.
+             In the event of an error, press the “C” key."),
+      '</div>
+
+      <div class="gridTwelveTippy">
+      <i class="fas fa-hand colorTippyIcon"></i>',
+      i18n$t(" Click and hold to drag the calculator to the desired position."),
+      '</div>
+
+      <div class="gridTwelveTippy">
+      <i class="fas fa-keyboard colorTippyIcon"></i>',
+      i18n$t(" Type directly into the display for more flexible calculations.
+             Type ENTER to calculate."),
+      '</div>
+
+      <div style="grid-column: span 12; margin-bottom: 3px;">
+      <i class="fas fa-person-chalkboard colorTippyIcon"></i>',
+      i18n$t(" Usage example:"),
+      '</div>
+
+      <div style="grid-column: span 12;">
+      <img src="www/calculator.gif" style="height: 45px;
+      width: 100%; border-radius: 5px;">
+      </div>
+
+      </div>
+      </div>
+      </div>
+      <!--calculator body translation-->
+
+      <!--visor-->
+      <span id="typeCalcSpan">', i18n$t("Type"), '</span>
+      <span id="errorCalcSpan">', i18n$t("Press C"), '</span>
+
+      </div>
+
+      <head>
+
+      <style>
+      .tippy-box[data-theme~="tippyCalcStyle"] {
+        background-color: #020202;
+        outline-offset: -2px;
+        outline: 1px solid #858383;
+        width: 315px;
+      }
+      .tippy-box[data-theme~="tippyCalcStyle"][data-placement^="right"] > .tippy-arrow::before {
+        border-right-color: #020202;
+      }
+      .colorTippyIcon {
+        color: #49a6de;
+      }
+      </style>
+
+      <script>
+
+      // type calculator translate
+      document.addEventListener("DOMContentLoaded", function() {
+
+      // tippy calculator
+      function tippyTransEffort (tippyCalcHTMLUse) {
+
+        tippy("#tippycalculator1", {
+          allowHTML: true,
+          placement: "right",
+          arrow: true,
+          followCursor: false,
+          theme: "tippyCalcStyle",
+          trigger: "click",
+          interactive: true,
+          content: tippyCalcHTMLUse
+        });
+
+      };
+
+        function tippyTransEffort2() {
+          let tippyCalcHTMLUse = $("#tippyCalcHTML").html();
+          tippyTransEffort(tippyCalcHTMLUse);
+        };
+
+        $("#dropStartContainer1").on("click", function() {
+          tippyTransEffort2();
+        });
+
+        });
+        </script>
+
+        </head>
+
+        <button id="showCalculatorButton" style="display: none;"></button>
+
+        <div class="calculator">
+
+        <!--title calculator-->
+        <div id="namecalculator" style="display: inline-flex; width: 100%;">', i18n$t("Calculator"),
+
+        '<div id="tippycalculator1" style="color: #49a6de; cursor: pointer; width: 22px; height: 22px;
+        font-size: 20px; position: relative; top: -3px; left: 2%;">
+        <i class="fas fa-circle-info"></i></div>
+
+        <div id="closecalculator1" onclick="document.getElementById(\'showCalculatorButton\').click()"
+        style="cursor: pointer; position: absolute; top: 9px; left: 88%;
+        background-color: #fafac0; border-radius: 100%; height: 20px;">
+        <i class="fas fa-circle-xmark" style="color: #dd4b39; font-size: 20px;"></i></div>
+
+        </div>
+
+        <!--calculacor screen/ buttons-->
+        <div class="screen">
+        <div class="operation"></div>
+        <table>
+          <tr>
+            <td colspan="3"><input type="text" id="resultScreen"></td>
+          </tr>
+        </table>
+      </div>
+      <div class="buttoness">
+        <div class="buttonpress clear"
+        style="background-color: #dd4b39; color: #fafac0;">
+        <i class="fas fa-c" style="position: relative; top: 2px;"></i>
+        </div>
+        <div class="buttonpress backspace" style="background-color: #ff9800">
+        <i class="fas fa-delete-left" style="position: relative; top: 2px;"></i>
+        </div>
+        <div class="buttonpress operator">.</div>
+        <div class="buttonpress operator">/</div>
+        <div class="buttonpress numberinc">7</div>
+        <div class="buttonpress numberinc">8</div>
+        <div class="buttonpress numberinc">9</div>
+        <div class="buttonpress operator">*</div>
+        <div class="buttonpress numberinc">4</div>
+        <div class="buttonpress numberinc">5</div>
+        <div class="buttonpress numberinc">6</div>
+        <div class="buttonpress operator">-</div>
+        <div class="buttonpress numberinc">1</div>
+        <div class="buttonpress numberinc">2</div>
+        <div class="buttonpress numberinc">3</div>
+        <div class="buttonpress operator">+</div>
+        <div class="buttonpress numberinc">0</div>
+        <div class="buttonpress equal" style="background-color: #57ee57;">
+        <i class="fas fa-equals" style="position: relative; top: 2px;"></i>
+        </div>
+        <div class="buttonpress operator">(</div>
+        <div class="buttonpress operator">)</div>
+        </div>
+
+        </div>'
+      )),
+
+      HTML(paste0(
+      "<div class='elementNone'>
+      <span id='titleTextDropSpan1'>", i18n$t("CHANGE"), "</span>
+      <span id='titleTextDropSpan2'>", i18n$t("CONTRIB."), "</span>
+      <span id='falseAboveSpan1'>", i18n$t("False"), "</span>
+      <span id='trueAboveSpan1'>", i18n$t("True"), "</span>
+      </div>"
+      )),
+
+      # swiper color shadow----
+      HTML(
+        "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+          $('#dropStartContainer1').one('click', function() {
+          $('<style>.swiper-cube-shadow:before {\\
+          background-color: #6b8514 !important;\\
+          }</style>').appendTo('body');
+          });
+
+          $('#swiperChangeBttn1').on('click', function() {
+            $('<style>.swiper-cube-shadow:before {\\
+            background-color: #6b8514 !important;\\
+          }</style>').appendTo('body');
+          });
+
+          $('#swiperChangeBttn2').on('click', function() {
+            $('<style>.swiper-cube-shadow:before {\\
+            background-color: #ff8000 !important;\\
+          }</style>').appendTo('body');
+          });
+
+          $('#swiperChangeBttn3').on('click', function() {
+            $('<style>.swiper-cube-shadow:before {\\
+            background-color: #167291 !important;\\
+          }</style>').appendTo('body');
+          });
+
+          $('#swiperChangeBttn4').on('click', function() {
+            $('<style>.swiper-cube-shadow:before {\\
+            background-color: orange !important;\\
+          }</style>').appendTo('body');
+          });
+
+        });
+        </script>"
+      ),
+
+      # swiper inputTextSwiper1----
+      HTML(paste0(
+        '<div style="display: none">
+        <span id="placeTextSwiperId1">', i18n$t("Minimum 5 characters"), '</span>
+        </div>
+
+        <style>
+        .pulseClass1 {
+          border: 2px solid #f00;
+        }
+
+        .pulseClass2 {
+          box-shadow: 0 0 10px 1px lime;
+          border: 2px solid #008009;
+        }
+        </style>
+
+        <script>
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+          $(document).on("change", "#inputTextSwiper1", function() {
+            Shiny.setInputValue("inputTextSwiper1", document.getElementById("inputTextSwiper1").value, {priority: "event"});
+          });
+
+        });
+
+        $(document).ready(function() {
+
+        let $inputTextSlider1 = $("<input id=\\\"inputTextSwiper1\\\"\\
+        class=\\\"pulseClass1\\\" type=\\\"text\\\" maxlength=\\\"25\\\"\\
+        style=\\\"width: 97.5%; border-radius: 5px; background-color: inherit;\\
+        outline: none;\\\">");
+
+        let inputTextSlider1 = $inputTextSlider1.get(0);
+
+        function updateContainerInputSliderTextInterval1() {
+
+          let $containerinputTextSlider1 = $("#toBeAppendedinputTextSlider1");
+
+          if ($containerinputTextSlider1.length > 0) {
+            $containerinputTextSlider1.append($inputTextSlider1);
+          }
+
+          let inputTextSwiper = document.getElementById("inputTextSwiper1");
+          let buttonSendDataDtBtn1 = document.getElementById("openAssignDataBtn");
+          let iconSendDataBtnUse1 = document.getElementById("iconSendDataBtn1");
+          let toBeAppendedSendDataDtBtnUse1 = document.getElementById("toBeAppendedSendDataDtBtn1");
+
+          inputTextSwiper.addEventListener("input", function() {
+            if (this.value.length <= 5) {
+              this.classList.add("pulseClass1");
+              this.classList.remove("pulseClass2");
+              buttonSendDataDtBtn1.style.backgroundColor = "#dd4b39";
+              buttonSendDataDtBtn1.style.pointerEvents = "none";
+              toBeAppendedSendDataDtBtnUse1.style.cursor = "not-allowed";
+              iconSendDataBtnUse1.classList.add("fa-xmark");
+              iconSendDataBtnUse1.classList.remove("fa-check");
+            } else {
+              this.classList.remove("pulseClass1");
+              this.classList.add("pulseClass2");
+              buttonSendDataDtBtn1.style.backgroundColor = "#008009";
+              buttonSendDataDtBtn1.style.pointerEvents = "auto";
+              toBeAppendedSendDataDtBtnUse1.style.cursor = "auto";
+              iconSendDataBtnUse1.classList.remove("fa-xmark");
+              iconSendDataBtnUse1.classList.add("fa-check");
+            }
+          });
+
+          let placeTextSwiperUse1 = document.getElementById("placeTextSwiperId1").textContent;
+
+          document.getElementById("inputTextSwiper1").setAttribute("placeholder", placeTextSwiperUse1);
+
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            let interval = setInterval(updateContainerInputSliderTextInterval1, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 2000);
+          });
+        });
+       </script>'
+      )),
+
+      # swiper inputSliderChange1 button----
+      HTML(paste0(
+        '<div style="display: none;">
+
+       <!--swal addData-->
+       <span id="titleSwalAssignDT1">', i18n$t("Assign data"), '</span>
+       <span id="textSwalAssignDT1">', i18n$t("The data to be entered is as follows:"), '</span>
+       <span id="buttonSwalAssignDT1">', i18n$t("Assign"), '</span>
+       <span id="buttonSwalAssignDT2">', i18n$t("Back"), '</span>
+
+       <!--AWN swal addData button-->
+       <span id="addTitleSwalSpan">', i18n$t("Added!"), '</span>
+       <span id="addContentSwalSpan">', i18n$t("Data added successfully."), '</span>
+
+       </div>
+
+       <style>
+       [id^="addData"] {
+         font-size: 20px;
+         color: #fafac0;
+         border: 2px solid #555555;
+         border-radius: 4px;
+         outline: none;
+         padding: 3px;
+       }
+
+       #addDataBackBtn:active {
+         background-color: #40bcac !important;
+       }
+
+       #addDataAssignBtn:active {
+         background-color: #28c949 !important;
+       }
+
+       #openAssignDataBtn:active {
+         background-color: #28c949 !important;
+       }
+       </style>
+
+      <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        $(document).on("click", "#openAssignDataBtn", function() {
+          Shiny.setInputValue("openAssignDataBtn", Math.random(), {priority: "event"});
+        });
+      });
+
+      $(document).ready(function() {
+
+        let $sendDataDtBtn1 = $("<button id=\\\"openAssignDataBtn\\\"\\
+        style=\\\"background-color: #dd4b39; color: #fafac0;\\
+        border: 2px solid #858383; border-radius: 100%;\\
+        width: 30px; height: 30px; outline: none; pointer-events: none;\\\">\\
+        <i id=\\\"iconSendDataBtn1\\\" class=\\\"fas fa-xmark\\\"\\
+        style=\\\"position: relative; top: 1px;\\\"></i>\\
+        </button>");
+
+        let sendDataDtBtn1 = $sendDataDtBtn1.get(0);
+
+        function updateContainerSendDataDtBtn1() {
+
+          let $containersendDataDtBtn1 = $("#toBeAppendedSendDataDtBtn1");
+
+          if ($containersendDataDtBtn1.length > 0) {
+            $containersendDataDtBtn1.append($sendDataDtBtn1);
+          }
+
+          let titleSwalAssignDTUse1 = $("#titleSwalAssignDT1").html();
+          let textSwalAssignDTUse1 = $("#textSwalAssignDT1").html();
+          let buttonSwalAssignDTUse1 = $("#buttonSwalAssignDT1").text();
+          let buttonSwalAssignDTUse2 = $("#buttonSwalAssignDT2").text();
+
+          $("#openAssignDataBtn").on("click", function() {
+
+            Swal.fire({
+              icon: "question",
+              html: `<!--HTML text-->
+                  <div style="margin-bottom: 15px;">
+                  <span style="font-size: 27px; color: #242832;">`+titleSwalAssignDTUse1+`</span>
+                  </div>
+                  <span style="font-size: 18px; color: #242832;">`+textSwalAssignDTUse1+`</span>
+                  <div style="margin-top: 20px;">
+                  <button id="addDataBackBtn" onclick="swal.close(); return false;"
+                  style="background-color: #49a6de;">
+                  <i class="fas fa-person-walking-arrow-loop-left"></i> `+buttonSwalAssignDTUse2+`
+                  </button>
+                  <button id="addDataAssignBtn"
+                  onclick="Shiny.setInputValue(\'addDataAssignBtn\', Math.random(), {priority: \'event\'});
+                  swal.close(); return false;"
+                  style="background-color: #008019;">
+                  <i class="fas fa-circle-check"></i> `+buttonSwalAssignDTUse1+`</button>
+                  </div>`,
+                  allowOutsideClick: false,
+                  showConfirmButton: false,
+                  iconColor: "#1c5bba",
+                  background: "#bffbff",
+                  customClass: {
+                  title: "swalDropTitle1"
+                  },
+                  width: 475,
+
+                  showClass: {
+                    popup: "animated bounceInDown faster"
+                  },
+                  hideClass: {
+                    popup: "animated bounceOutUp faster"
+                  },
+
+                  didOpen: function() {
+                    $("[id^=\\\"addData\\\"], .swal2-container.swal2-center.swal2-backdrop-show").on("click", function(e) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    });
+                  },
+
+                 willClose: function() {
+
+                   let notifierSwalAddDT = new AWN();
+
+                   let title = document.getElementById("addTitleSwalSpan").innerText;
+                   let content = document.getElementById("addContentSwalSpan").innerText;
+
+                     $("#addDataAssignBtn").on("click", function() {
+                       setTimeout(function() {
+                         notifierSwalAddDT.success(
+                           "<div><span>"+content+"</span></div>",
+                           { labels: { success: title },
+                           icons: { success: "fas fa-file-circle-plus" }
+                         }
+                          );
+                       }, 500);
+                   });
+
+                 }
+
+             });
+
+             $("#addDataAssignBtn").on("click", function() {
+               let inputTextSwuperUse1 = document.getElementById("inputTextSwiper1");
+               let buttonSendDataDtBtn1 = document.getElementById("openAssignDataBtn");
+               let iconSendDataBtnUse1 = document.getElementById("iconSendDataBtn1");
+               let toBeAppendedSendDataDtBtnUse1 = document.getElementById("toBeAppendedSendDataDtBtn1");
+
+               $("#inputTextSwiper1").val("");
+               inputTextSwuperUse1.classList.add("pulseClass1");
+               inputTextSwuperUse1.classList.remove("pulseClass2");
+               buttonSendDataDtBtn1.style.backgroundColor = "#dd4b39";
+               buttonSendDataDtBtn1.style.pointerEvents = "none";
+               toBeAppendedSendDataDtBtnUse1.style.cursor = "not-allowed";
+               iconSendDataBtnUse1.classList.add("fa-xmark");
+               iconSendDataBtnUse1.classList.remove("fa-check");
+             });
+
+          });
+
+        };
+
+        document.getElementById("dropStartContainer1").addEventListener("click", function() {
+          let interval = setInterval(updateContainerSendDataDtBtn1, 1000);
+          setTimeout(function() {
+            clearInterval(interval);
+          }, 2000);
+        });
+
+        });
+        </script>'
+      )),
+
+      # swiper inputSliderChange1----
+      HTML(
+        '<script>
+      $(document).ready(function() {
+
+        let $inputSlider1 = $("<input id=\\\"inputSliderChange1\\\"\\
+        style=\\\"background-color: #40bcac;\\\"\\
+        min=\\\"1\\\" max=\\\"99\\\" value=\\\"50\\\" type=\\\"text\\\"\\
+        onkeyup=\\\"if(value<=0) value=null;if(value>99) value=99;\\\"\\
+        step=\\\"0.1\\\" maxlength=\\\"4\\\" oninput=\\\"updateSecondInput()\\\">");
+
+        let inputSlider1 = $inputSlider1.get(0);
+
+        function updateContainerInputSliderInterval1() {
+          let $containerInputSlider1 = $("#toBeAppendedInputSlider1");
+
+          if ($containerInputSlider1.length > 0) {
+            $containerInputSlider1.append($inputSlider1);
+          }
+
+          $("#inputSliderChange1").on("change", function(e) {
+            if (e.originalEvent) {
+            $("#btnChangeValue1").addClass("btnChangeValueClass1");
+            $("<style>.btnChangeValueClass1{\\
+              animation: pulseBtnChange1 2s ease-out infinite;\\
+            }\\
+            @keyframes pulseBtnChange1 {\\
+              0%, 100% { background-color: #bababa }\\
+              50% { background-color: #dd4b39 }\\
+            }\\
+            </style>").appendTo("head");
+            }
+          });
+
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            let interval = setInterval(updateContainerInputSliderInterval1, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 2000);
+          });
+
+        });
+       </script>'
+      ),
+
+      # swiper inputSliderChange1 button----
+      HTML(
+        '<script>
+      document.addEventListener("DOMContentLoaded", function() {
+        let $inputSliderBtn1 = $("<button id=\\\"btnChangeValue1\\\"\\
+        style=\\\"box-shadow: -2px 2px 1px #40bcac;\\\">\\
+        <i class=\\\"fas fa-play-circle\\\"\\
+        style=\\\"color: #242832; margin-top: 4px;\\\"></i>\\
+        </button>");
+
+        let inputSliderBtn1 = $inputSliderBtn1.get(0);
+
+        function updateContainerInputSliderBtnInterval1() {
+          let $containerInputSliderBtn1 = $("#toBeAppendedInputBtnSlider1");
+
+          if ($containerInputSliderBtn1.length > 0) {
+            $containerInputSliderBtn1.append($inputSliderBtn1);
+          }
+
+          document.getElementById("btnChangeValue1").addEventListener("click", function() {
+            let inputSlider1Value = parseFloat(document.getElementById("inputSliderChange1").value);
+            slider1.noUiSlider.set(inputSlider1Value);
+            document.getElementById("btnChangeValue1").classList.remove("btnChangeValueClass1");
+          });
+
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            let interval = setInterval(updateContainerInputSliderBtnInterval1, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 2000);
+          });
+
+        });
+
+       </script>'
+      ),
+
+      # swiper inputSliderChange2----
+      HTML(
+        '<script>
+      document.addEventListener("DOMContentLoaded", function() {
+        let $inputSlider2 = $("<input id=\\\"inputSliderChange2\\\"\\
+        style=\\\"background-color: #ff8000;\\\"\\
+        min=\\\"1\\\" max=\\\"99\\\" value=\\\"49.9\\\" type=\\\"text\\\"\\
+        onkeyup=\\\"if(value<0) value=null;if(value>99) value=99;\\\"\\
+        step=\\\"0.1\\\" maxlength=\\\"4\\\">");
+
+        let inputSlider2 = $inputSlider2.get(0);
+
+        function updateContainerInputSliderInterval2() {
+          let $containerinputSlider2 = $("#toBeAppendedInputSlider2");
+
+          if ($containerinputSlider2.length > 0) {
+            $containerinputSlider2.append($inputSlider2);
+          }
+
+          $("#inputSliderChange2").on("change", function(e) {
+            if (e.originalEvent) {
+            $("#btnChangeValue2").addClass("btnChangeValueClass2");
+            $("<style>.btnChangeValueClass2{\\
+              animation: pulseBtnChange2 2s ease-out infinite;\\
+            }\\
+            @keyframes pulseBtnChange2 {\\
+              0%, 100% { background-color: #bababa }\\
+              50% { background-color: #dd4b39 }\\
+            }\\
+            </style>").appendTo("head");
+            }
+          });
+
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            let interval = setInterval(updateContainerInputSliderInterval2, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 2000);
+          });
+
+        });
+       </script>'
+      ),
+
+      # swiper inputSliderChange2 button----
+      HTML(
+        '<script>
+      document.addEventListener("DOMContentLoaded", function() {
+
+        let $inputSliderBtn2 = $("<button id=\\\"btnChangeValue2\\\"\\
+        style=\\\"box-shadow: -2px 2px 1px #ff8000;\\\">\\
+        <i class=\\\"fas fa-play-circle\\\"\\
+        style=\\\"color: #242832; margin-top: 4px;\\\"></i>\\
+        </button>");
+
+        let inputSliderBtn2 = $inputSliderBtn2.get(0);
+
+        function updateContainerInputSliderBtnInterval2() {
+          let $containerInputSliderBtn2 = $("#toBeAppendedInputBtnSlider2");
+
+          if ($containerInputSliderBtn2.length > 0) {
+            $containerInputSliderBtn2.append($inputSliderBtn2);
+          }
+
+          document.getElementById("btnChangeValue2").addEventListener("click", function() {
+            let inputSlider2Value = parseFloat(document.getElementById("inputSliderChange2").value);
+            slider2.noUiSlider.set(inputSlider2Value);
+            document.getElementById("btnChangeValue2").classList.remove("btnChangeValueClass2");
+          });
+
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            let interval = setInterval(updateContainerInputSliderBtnInterval2, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 2000);
+          });
+
+        });
+
+       </script>'
+      ),
+
+      # swiper autonumeric howearnadj1----
+      HTML(
+        '<style>
+                        #howearnadj1 {
+                          border: 2px solid #008019;
+                          border-radius: 5px;
+                          outline: solid 1px #85838399;
+                          outline-offset: -4px;
+                          background-color: #fafac0;
+                          margin-top: 13px;
+                          height: 30px;
+                        }
+                        </style>
+
+                        <script>
+                         document.addEventListener("DOMContentLoaded", function() {
+                           $(document).on("change", "#howearnadj1", function() {
+                             Shiny.setInputValue("howearnadj1", parseFloat($("#howearnadj1").val().replace(/[^0-9.-]+/g,"")), {priority: "event"});
+                           })
+                         });
+
+      document.addEventListener("DOMContentLoaded", function() {
+        let $inputAutoEarnAdj1 = $("<input id=\\\"howearnadj1\\\" type=\\\"text\\\">");
+
+        let inputAutoEarnAdj1 = $inputAutoEarnAdj1.get(0);
+
+        function updateContainerInputAutoAdjInterval1() {
+          let $containerinputAutoEarnAdj1 = $("#toBeAppendedinputAutoEarnAdj1");
+
+          if ($containerinputAutoEarnAdj1.length > 0) {
+            $containerinputAutoEarnAdj1.append($inputAutoEarnAdj1);
+            $(document).ready(function() {
+              var autoNumericInstance = new AutoNumeric("#howearnadj1", {
+                  currencySymbol: "US$",
+                  currencySymbolPlacement: "p",
+                  decimalPlaces: 2,
+                  decimalCharacter: ".",
+                  digitGroupSeparator: ",",
+                  minimumValue: 0,
+                  // Evita usar arrowup/ down para mudar valores
+                  modifyValueOnUpDownArrow: false,
+                  // Evita que o currency desapareça no change
+                  watchExternalChanges: true
+              });
+            });
+          }
+
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            /// modify time to avoid bug in autonumeric.js
+            let interval = setInterval(updateContainerInputAutoAdjInterval1, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 1500);
+          }, {once: true});
+
+        });
+       </script>'
+      ),
+
+      # swiper select2 (efforting)----
+      HTML(paste0(
+        '<style>
+        .titleTippy {
+          grid-column: span 12;
+          text-align: center;
+          font-size: 20px;
+        }
+        .hrTippy {
+          border-top: 2px solid #49a6de;
+          margin: 3px 0 7px 0;
+        }
+        </style>
+
+        <!--START TRANSLATE SELECT2-->
+        <div class="elementNone gridClass">
+
+        <div style="grid-column: span 12;">
+        <div class="gridClass">
+
+        <div id="contentPopCompany1" style="grid-column: span 12;">
+        <div id="titlePopCompany1" class="titleTippy">
+        <i class="fas fa-circle-down"></i>',
+        i18n$t(" Low effort"),
+        '</div>
+        <div class="titleTippy"><hr class="hrTippy"></div>
+        <div style="grid-column: span 12;">',
+        i18n$t("The consumer makes little effort to acquire the product or service.
+        They pay attention to peripheral signs of the product, such as ease
+        of finding the item, packaging and promotions."),
+        '</div>
+        </div>
+
+        <div id="contentPopCompany2" style="grid-column: span 12;">
+        <div id="titlePopCompany2" class="titleTippy">
+        <i class="fas fa-circle-up"></i>',
+        i18n$t(" High effort"),
+        '</div>
+        <div class="titleTippy"><hr class="hrTippy"></div>
+        <div style="grid-column: span 12;">',
+        i18n$t("Consumers spend a lot of effort to acquire a product or
+        service. They pay great attention to information about
+        the product, given the importance of the purchase.
+        Examples are the purchase of cars, houses, household
+        appliances or factory machinery."),
+        '</div>
+        </div>
+
+        </div>
+        </div>
+
+        <!--END TRANSLATE SELECT2-->
+        </div>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+        let $inputSelectEffort = $(`<div id=\\\"pickerEffortDiv\\\"\\
+        style=\\\"position: relative; top: -5px;\\\">\\
+        <i class=\\\"fas fa-shuffle\\\" style=\\\"color: #49a6de;\\\"></i> EFFORTING\\
+        <select id=\\\"selectPickerEffort\\\" style=\\\"width: 100%;\\\">\\
+        <option value=\\\"LE\\\" data-icon=\\\"fas fa-circle-down\\\"></option>\\
+        <option value=\\\"HE\\\" data-icon=\\\"fas fa-circle-up\\\"></option>\\
+        </select>\\
+        </div>`);
+
+        let inputSelectEffort = $inputSelectEffort.get(0);
+
+        function updateContainerEffortInterval1() {
+          let $containerSelectEffort = $("#toBeAppendedSelectEffort1");
+
+          if ($containerSelectEffort.length > 0) {
+            $containerSelectEffort.append($inputSelectEffort);
+
+            $(document).ready(function() {
+
+            // initialize select2 (empty - is necessary)
+            $("#selectPickerEffort").select2();
+
+            // put icons in select2 options
+            function formatState(state) {
+              if (!state.id) {
+                  return state.text;
+              }
+              let $state = $(
+                  "<span><i class=\'" + $(state.element).data("icon") + "\'></i> " + state.text + "</span>"
+              );
+              return $state;
+            }
+
+            // update language select2
+            let titlePopOption1 = $("#titlePopCompany1").text();
+            let titlePopOption2 = $("#titlePopCompany2").text();
+
+            $("#selectPickerEffort option[value=\'LE\']").text(titlePopOption1);
+            $("#selectPickerEffort option[value=\'HE\']").text(titlePopOption2);
+
+              $("#selectPickerEffort").select2("destroy").select2({
+                minimumResultsForSearch: Infinity,
+                dropdownPosition: "below",
+                templateResult: formatState,
+                templateSelection: formatState,
+                dropdownParent: $("#pickerEffortDiv")
+              }).on("select2:open", function(e) {
+
+              // animate stopPropagation avoid close shinyWidgets::dropdown()
+              $(".select2-dropdown").each(function() {
+                $(this).addClass("animated flipInY").on("animationend", function(event) {
+                  event.stopPropagation();
+                });
+              });
+
+              let titlePop1 = $("#titlePopCompany1").html();
+              let titlePop2 = $("#titlePopCompany2").html();
+              let textPop1 = $("#contentPopCompany1").html();
+              let textPop2 = $("#contentPopCompany2").html();
+
+              let titles = [titlePop1, titlePop2];
+              let contents = [textPop1, textPop2];
+
+          let $this = $(this)
+
+          setTimeout(function() {
+            let $lis = $this.data("select2").$results.find("li");
+            $lis.each(function(i) {
+              tippy(this, {
+                allowHTML: true,
+                content: contents[i],
+                trigger: "mouseenter",
+                placement: "right",
+                theme: "tippySelectStyle"
+              });
+            });
+          });
+
+        })
+
+            });
+
+        };
+
+        };
+
+        document.getElementById("dropStartContainer1").addEventListener("click", function() {
+          let interval = setInterval(updateContainerEffortInterval1, 1000);
+          setTimeout(function() {
+            clearInterval(interval);
+          }, 2000);
+        }, {once: true});
+
+        });
+        </script>'
+      )),
+
+      # roundSliderThermo----
+      HTML(
+        '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+        $(document).on("change", "#roundSliderSwot1", function() {
+            Shiny.setInputValue("roundSliderSwot1", $("#roundSliderSwot1").roundSlider("getValue"), {priority: "event"});
+          });
+        });
+
+          function changeDropTherm1(e) {
+
+            let val = e.value, speed;
+
+            return "<div id=\\\"changeStyleRoundTherm\\\" style=\\\"position: absolute;\\
+                  font-size: 25px; padding: 2px; color: #ff9000; padding-bottom: 1px;\\
+                  width: 48px; border-radius: 6px; display: block; margin: auto;\\
+                  text-align: center; font-weight: bold;\\
+                  pointer-events: none; height: 0;\\\">" + val + "%</div>";
+
+          }
+
+        $(document).ready(function() {
+
+          let $divRoundSwot1 = $("<div id=\\\"roundSliderSwot1\\\"></div>");
+          let divRoundSwot1 = $divRoundSwot1.get(0);
+
+          function updateContainerRoundSliderInterval1() {
+
+            let $containerRoundSwot1 = $("#toBeRoundSwot1");
+
+            if($containerRoundSwot1.length > 0) {
+
+              $containerRoundSwot1.append($divRoundSwot1);
+
+              $("#roundSliderSwot1").roundSlider({
+                sliderType: "min-range",
+                editableTooltip: false,
+                radius: 50,
+                min: 0,
+                max: 100,
+                width: 12,
+                value: 15,
+                handleSize: 0,
+                handleShape: "square",
+                circleShape: "pie",
+                startAngle: 315,
+                tooltipFormat: "changeDropTherm1"
+              });
+
+            }
+
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            let interval = setInterval(updateContainerRoundSliderInterval1, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 2000);
+          }, {once: true});
+
+        });
+      </script>'
+      ),
+
+      # swiper thermometer 1----
+      HTML(
+        '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+        let $inputThermo1 = $("<div id=\\\"thermo1\\\"></div>");
+        let inputThermo1 = $inputThermo1.get(0);
+
+        /// update value
+        function updateThermometer1() {
+          // Obtém o valor do roundSliderSwot1
+          let roundSliderSwot1Value = $("#roundSliderSwot1").roundSlider("getValue") / 100;
+          // Define o valor do termômetro com base no roundSliderSwot1
+          $("#thermo1").thermometer("setValue", roundSliderSwot1Value);
+          // Chama a função novamente após 1 segundo
+          window.setTimeout(updateThermometer1, 1000);
+        };
+
+        /// update color
+        function RGB2HTML(red, green, blue) {
+          let decColor = 0x1000000+blue + 0x100*green + 0x10000*red ;
+        	return "#"+decColor.toString(16).substr(1);
+        }
+
+        function updateContainerThermoInterval1() {
+          let $containerThermo1 = $("#toBeAppendedThermo1");
+
+          if ($containerThermo1.length > 0) {
+            $containerThermo1.append($inputThermo1);
+
+            $("#thermo1").thermometer({
+              height: 370,
+              width: 220,
+              speed: "slow",
+              startValue: .15,
+              minValue: 0,
+              maxValue: 1,
+              bottomText: "0",
+              topText: "100",
+            	liquidColour: function( value ) {
+          			var red = ~~(value / 1 * 255);
+          			var grn = ~~((1-value)/1 * 255);
+          			return RGB2HTML(red,grn,0);
+          		},
+              textColour: "#242832",
+              tickColour: "#242832",
+              pathToSVG: "www/thermo-bottom.svg",
+              animationSpeed: 1000,
+              onLoad: function() {
+                updateThermometer1();
+              }
+           });
+
+          }
+
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            let interval = setInterval(updateContainerThermoInterval1, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 2000);
+          }, {once: true});
+
+        });
+        </script>'
+      ),
+
+      # swiper select2 (company advantages)----
+      HTML(paste0(
+        '<div class="elementNone">
+        <span id="advantagesSpan">', i18n$t(" ADVANTAGES"), '</span>
+        <span id="disadvantagesSpan">', i18n$t(" DISADVANTAGES"), '</span>
+        <span id="placeEffortSpan">', i18n$t("Type and press ENTER"), '</span>
+        <span id="charLeftSpan">', i18n$t(" more to go..."), '</span>
+        <span id="charDeleteSpan">', i18n$t("Delete "), '</span>
+        <span id="maximumPillsSpan">', i18n$t("Limit: 3 items"), '</span>
+        <span id="rmvSingleSlctSpan">', i18n$t("Remove this item"), '</span>
+        <span id="rmvAllSlctSpan">', i18n$t("Remove all items"), '</span>
+        </div>
+
+        <style>
+        [id^="selectTwoLabel"] {
+          font-size: 14px;
+        }
+        </style>
+
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+
+        // ready container advantages
+        let $inputSelectTwoA1 = $("<div id=\\\"divWrapperSelectA1\\\">\\
+        <i class=\\\"fas fa-disease\\\" style=\\\"color: #4bf542;\\\"></i>\\
+        <span id=\\\"selectTwoLabelAdv\\\"></span>\\
+        <select id=\\\"selectTwoDivA1\\\" multiple=\\\"multiple\\\"\\
+        style=\\\"margin-top: 10px;\\\"></select>\\
+        </div>");
+
+        // ready container disadvantages
+        let $inputSelectTwoA2 = $("<div id=\\\"divWrapperSelectB1\\\">\\
+        <i class=\\\"fas fa-skull\\\" style=\\\"color: #ff5000;\\\"></i>\\
+        <span id=\\\"selectTwoLabelDisadv\\\">DISADVANTAGES</span>\\
+        <select id=\\\"selectTwoDivA2\\\" multiple=\\\"multiple\\\"\\
+        style=\\\"margin-top: 10px;\\\"></select>\\
+        </div>");
+
+        function updateContainerSelectTwoInterval1(placeEffortUse, charLeftUse, charDeleteUse, maximumPillsUse) {
+
+        // set container advantages
+        let inputSelectTwoA1 = $inputSelectTwoA1.get(0);
+
+        let $containerSelectTwoA1 = $("#toBeAppendedSelectTwoA1");
+
+          if ($containerSelectTwoA1.length > 0) {
+            $containerSelectTwoA1.append($inputSelectTwoA1);
+
+              $("#selectTwoDivA1").select2({
+              placeholder: placeEffortUse,
+              allowClear: true,
+              closeOnSelect: true,
+              minimumInputLength: 3,
+              maximumInputLength: 14,
+              dropdownPosition: "below",
+              maximumSelectionLength: 3, // maximum words
+              tags: true,
+              width: 190,
+              dropdownParent: $("#divWrapperSelectA1"),
+              language: {
+                inputTooShort: function(args) {
+                  let remainingChars = args.minimum - args.input.length;
+                  return remainingChars + charLeftUse;
+                },
+                inputTooLong: function(args) {
+                  let remainingChars = args.input.length - args.maximum;
+                  return charDeleteUse + remainingChars;
+                },
+                maximumSelected: function (e) {
+                  return maximumPillsUse
+                }
+              }
+              });
+
+          };
+
+          // set container disadvantages
+          let inputSelectTwoA2 = $inputSelectTwoA2.get(0);
+
+          let $containerSelectTwoA2 = $("#toBeAppendedSelectTwoA2");
+
+          if ($containerSelectTwoA2.length > 0) {
+            $containerSelectTwoA2.append($inputSelectTwoA2);
+
+              $("#selectTwoDivA2").select2({
+              placeholder: placeEffortUse,
+              allowClear: true,
+              closeOnSelect: true,
+              minimumInputLength: 3,
+              maximumInputLength: 14,
+              dropdownPosition: "below",
+              maximumSelectionLength: 3, // maximum words
+              tags: true,
+              width: 190,
+              dropdownParent: $("#divWrapperSelectB1"),
+              language: {
+                inputTooShort: function(args) {
+                  let remainingChars = args.minimum - args.input.length;
+                  return remainingChars + charLeftUse;
+                },
+                inputTooLong: function(args) {
+                  let remainingChars = args.input.length - args.maximum;
+                  return charDeleteUse + remainingChars;
+                },
+                maximumSelected: function (e) {
+                  return maximumPillsUse
+                }
+              }
+              });
+
+          };
+
+          // miscellaneous
+
+          // stop propagation close (xmark) icon
+          $("[id^=\\\"selectTwoDiv\\\"]").on("select2:unselect", function(e) {
+            if (!e.params.originalEvent) {
+              return
+            }
+            e.params.originalEvent.stopPropagation();
+          });
+
+          // translate ADVANTAGES
+          let advSelectUse = document.getElementById("advantagesSpan").textContent;
+          document.getElementById("selectTwoLabelAdv").innerText = advSelectUse;
+
+          // translate DISADVANTAGES
+          let disadvSelectUse = document.getElementById("disadvantagesSpan").textContent;
+          document.getElementById("selectTwoLabelDisadv").innerText = disadvSelectUse;
+
+          // tippy remove all items (close icon) - for all pills select2
+          let removeAllSelect2 = document.getElementById("rmvAllSlctSpan").innerText;
+
+          const observerAll = new MutationObserver(function(mutationsList) {
+          mutationsList.forEach(function(mutation) {
+              mutation.addedNodes.forEach(function(node) {
+                  if ($(node).hasClass("select2-selection__clear")) {
+                      tippy(node, {
+                          allowHTML: true,
+                          placement: "top",
+                          arrow: true,
+                          followCursor: false,
+                          theme: "errorOrClose",
+                          trigger: "mouseenter",
+                          interactive: true,
+                          content: removeAllSelect2
+                      });
+                  }
+              });
+          });
+      });
+
+      observerAll.observe(document.body, { childList: true, subtree: true });
+
+          };
+
+          // go container
+          function updateContainerSelectTwoInterval11() {
+            let placeEffortUse = document.getElementById("placeEffortSpan").innerText;
+            let charLeftUse = document.getElementById("charLeftSpan").innerText;
+            let charDeleteUse = document.getElementById("charDeleteSpan").innerText;
+            let maximumPillsUse = document.getElementById("maximumPillsSpan").innerText;
+            updateContainerSelectTwoInterval1(placeEffortUse, charLeftUse, charDeleteUse, maximumPillsUse);
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            let interval = setInterval(updateContainerSelectTwoInterval11, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 2000);
+          });
+
+        });
+
+       </script>'
+      )),
+
+      # round slider company A1----
+      HTML(
+        '<script>
+      document.addEventListener("DOMContentLoaded", function() {
+
+      // get slider value
+      $(document).on("change", "#rndSldOnePtA1", function() {
+        Shiny.setInputValue("rndSldOnePtA1", $("#rndSldOnePtA1").roundSlider("getValue"), {priority: "event"});
+      });
+
+        let $divRoundSwot1 = $("<div id=\\\"rndSldOnePtA1\\\"></div>");
+        let divRoundSwot1 = $divRoundSwot1.get(0);
+
+         function updateContainerRoundSwot1() {
+
+            let $containerRoundSwot1 = $("#toBeRoundSwotA1");
+
+            if ($containerRoundSwot1.length > 0) {
+              $containerRoundSwot1.append($divRoundSwot1);
+              $("#rndSldOnePtA1").roundSlider({
+                sliderType: "min-range",
+                editableTooltip: false,
+                radius: 40,
+                min: 1,
+                max: 5,
+                width: 6,
+                value: 0,
+                handleSize: 0,
+                lineCap: "square", // or round
+                handleShape: "round",
+                circleShape: "pie",
+                startAngle: 315,
+                tooltipFormat: "changeTooltip"
+              });
+            }
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            let interval = setInterval(updateContainerRoundSwot1, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 2000);
+          });
+
+      });
+      </script>'
+      ),
+
+      # round slider company A2----
+      HTML(
+        '<style>
+      [class^="roundColorEdit"] {
+        padding: 1px;
+        border-radius: 5px;
+        color: #fafac0;
+        font-size: 10px;
+        font-weight: bold;
+        border: 1px solid #858383;
+        margin-left: 0;
+        position: relative;
+        display: inline-flex;
+        text-align: center;
+        pointer-events: none;
+      }
+
+      .roundColorEdit1 {
+        background-color: #008009;
+      }
+
+      .roundColorEdit2 {
+        background-color: #f00;
+      }
+
+      #rndSldTwoPtA1 .rs-tooltip {
+        top: 55px;
+      }
+      </style>
+
+      <script>
+
+      document.addEventListener("DOMContentLoaded", function() {
+        $(document).on("change", "#rndSldTwoPtA1", function() {
+          Shiny.setInputValue("rndSldTwoPtA1", $("#rndSldTwoPtA1").roundSlider("getValue"), {priority: "event"});
+        });
+      });
+
+      $(document).ready(function() {
+
+            function updateTooltips() {
+        $("#rndSldTwoPtA1 .rs-tooltip").each(function(index) {
+        let texto = $(this).text().split("-");
+        $(this).html("<span class=\\\"roundColorEdit1\\\">" + texto[0] + "</span>-\\
+                      <span class=\\\"roundColorEdit2\\\">" + texto[1] + "</span>");
+        });
+      };
+
+      let $divRoundSwotA2 = $("<div id=\\\"rndSldTwoPtA1\\\"></div>");
+      let divRoundSwotA2 = $divRoundSwotA2.get(0);
+
+      function updateContainerRoundSwotA2() {
+
+        let $containerRoundSwotA2 = $("#toBeRoundSwotA2");
+
+          if ($containerRoundSwotA2.length > 0) {
+            $containerRoundSwotA2.append($divRoundSwotA2);
+            $("#rndSldTwoPtA1").roundSlider({
+              sliderType: "range",
+              editableTooltip: false,
+              radius: 50,
+              min: 0,
+              max: 100,
+              width: 7,
+              value: "10,40",
+              handleSize: 0,
+              lineCap: "square", // or round
+              handleShape: "round",
+              circleShape: "half",
+              startAngle: 0
+            });
+          }
+
+          /// change pointer color individually
+          $("#rndSldTwoPtA1 .rs-handle").eq(0).attr("style", "border-right-color: #008009;");
+
+          /// edit output
+          $("#rndSldTwoPtA1").on("drag change", function(e) {
+            updateTooltips();
+          });
+
+          updateTooltips();
+
+          };
+
+          document.getElementById("dropStartContainer1").addEventListener("click", function() {
+            let interval = setInterval(updateContainerRoundSwotA2, 1000);
+            setTimeout(function() {
+              clearInterval(interval);
+            }, 2000);
+          });
+
+      });
+
+      </script>'
+      ),
+
+      # Echarts color/ lang config----
+      HTML(
+        '<script>
+        var toggleColorEcharts1 = false;
+
+          /// change color swiper hack
+          document.addEventListener("DOMContentLoaded", function() {
+            $("#darktheme1").on("click", function() {
+              var newScriptCompany = document.createElement("script");
+              newScriptCompany.text = `
+              $(document).ready(function() {
+                $("#drkThmSwp1").trigger("click");
+              });
+              `;
+              // Adiciona o novo script ao final do <body>
+                document.body.appendChild(newScriptCompany);
+              });
+          });
+        </script>'
+      ),
+
+      # auxGauge A1 (company)----
+      HTML(
+        '<script>
+
+          document.addEventListener("DOMContentLoaded", function() {
+
+            let chtRdAuxA1;
+
+            let $divRdAuxA1 = $("<div id=\\\"myChartRoundAuxA1\\\" style=\\\"height: 175px; width: 300px;\\\"></div>");
+
+            let divRdAuxA1 = $divRdAuxA1.get(0);
+            let intRdAuxA1;
+
+            /// create container
+            function upContIntRdAuxA1() {
+              let $contRdAuxA1 = $("#toBeAppendedRoundAuxA1");
+              if ($contRdAuxA1.length > 0) {
+                $contRdAuxA1.append($divRdAuxA1);
+                chtRdAuxA1 = echarts.init(divRdAuxA1);
+                updatEchtRdAuxA2(chtRdAuxA1);
+              }
+            };
+
+            intRdAuxA1 = setInterval(upContIntRdAuxA1, 1000);
+
+            function updatEchtRdAuxA1(chtRdAuxUseA1) {
+              let option = {
+                series: [{
+                  type: "gauge",
+                  min: 1,
+                  max: 5,
+                  radius: "55%",
+                  splitNumber: 4,
+                  axisLabel: {
+                    fontFamily: "Lato",
+                    fontSize: 12,
+                    distance: -13,
+                    textStyle: {
+                      textBorderWidth: 1,
+                      textBorderColor: "transparent"
+                    },
+                    color: "inherit",
+                    fontWeight: "bold",
+                    borderRadius: 100,
+                    formatter: function (value) {
+                      if (value === 1) {
+                        return "VL";
+                      } else if (value === 2) {
+                        return "L";
+                      } else if (value === 3) {
+                        return "R";
+                      } else if (value === 4) {
+                        return "H";
+                      } else if (value === 5) {
+                        return "VH";
+                      }
+                    }
+                  },
+                  axisLine: {
+                    lineStyle: {
+                      width: 15,
+                      color: [[.20, "#dd4b39"], [.40, "#ff7500"], [.60, "#2c821f"], [.80, "#3b739c"], [1, "fuchsia"]]
+                    }
+                  },
+                  axisTick: {
+                    show: false
+                  },
+                  splitLine: {
+                    length: 12,
+                    distance: -10,
+                    lineStyle: {
+                      color: "#020202"
+                    }
+                  }
+                }]
+              };
+
+              chtRdAuxUseA1.setOption(option);
+
+            };
+
+            function updatEchtRdAuxA2(chtRdAuxUseA1) {
+              updatEchtRdAuxA1(chtRdAuxUseA1);
+            };
+
+            updatEchtRdAuxA2(chtRdAuxA1);
+
+          });
+
+        </script>'
+      ),
+
+      # auxGauge B1 (company)----
+      HTML(
+        '<script>
+
+          document.addEventListener("DOMContentLoaded", function() {
+
+            let chtRdAuxB1;
+
+            let $divRdAuxB1 = $("<div id=\\\"myChartRoundAuxB1\\\" style=\\\"height: 175px; width: 300px;\\\"></div>");
+
+            let divRdAuxB1 = $divRdAuxB1.get(0);
+            let intRdAuxB1;
+
+            /// create container
+            function upContIntRdAuxB1() {
+              let $contRdAuxB1 = $("#toBeAppendedRoundAuxB1");
+              if ($contRdAuxB1.length > 0) {
+                $contRdAuxB1.append($divRdAuxB1);
+                chtRdAuxB1 = echarts.init(divRdAuxB1);
+                updatechartAuxRoundB2(chtRdAuxB1);
+              }
+            };
+
+          /// update color company
+          function updateAuxColorB1() {
+
+            const colorblackwhite = toggleColorEcharts1 ? "#fafac0" : "#242832";
+            const bluetransp = toggleColorEcharts1 ? "#40bcac" : "transparent";
+            const blackTextBorder = toggleColorEcharts1 ? "#020202" : "transparent";
+
+            chtRdAuxB1.setOption({
+              series: [{
+                axisTick: { lineStyle: { color: colorblackwhite } },
+                splitLine: { lineStyle: { color: colorblackwhite,
+                shadowColor: bluetransp } },
+                axisLabel: { color: colorblackwhite, textBorderColor: blackTextBorder }
+              }]
+            });
+
+          }
+
+            intRdAuxB1 = setInterval(upContIntRdAuxB1, 1000);
+
+            function updatechtRdAuxB1(chtRdAuxUseB1) {
+              let option = {
+               series: [{
+                type: "gauge",
+                min: 0,
+                max: 100,
+                radius: "58%",
+                splitNumber: 3,
+                startAngle: 180,
+                endAngle: 0,
+                axisLabel: {
+                  color: "#242832",
+                  distance: 12,
+                  fontFamily: "Lato",
+                  formatter: function(value) {
+                    return value.toFixed(0);
+                  }
+                },
+                axisLine: {
+                  show: false
+                },
+                axisTick: {
+                  length: 3,
+                  distance: 2,
+                  lineStyle: {
+                    color: "#242832"
+                  }
+                },
+                splitLine: {
+                  length: 6,
+                  distance: 2,
+                  lineStyle: {
+                    color: "#242832",
+                    shadowBlur: 10
+                  }
+                }
+                }]
+              };
+
+              chtRdAuxUseB1.setOption(option);
+
+              /// update color
+              updateAuxColorB1();
+
+            };
+
+            function updatechartAuxRoundB2(chtRdAuxUseB1) {
+              updatechtRdAuxB1(chtRdAuxUseB1);
+            };
+
+           function clrEchtSwipAuxB1() {
+              toggleColorEcharts1 = !toggleColorEcharts1;
+              updatechartAuxRoundB2(chtRdAuxB1);
+            };
+
+            $("#drkThmSwp1").on("click", function() {
+              clrEchtSwipAuxB1();
+            });
+
+            updatechartAuxRoundB2(chtRdAuxB1);
+
+          });
+
+        </script>'
+      ),
+
+      # gauge main company----
+      HTML(paste0(
+        '<div style="display: none;">
+        <span id="spanCompSwiper1">', i18n$t("Advantage"), '</span>
+        </div>
+
+        <script>
+
+        var togglePseudoLangSwiper = false;
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+          let chart1;
+          let toggleColorEcharts1 = false;
+
+          let $div = $("<div id=\\\"myChart\\\" style=\\\"height: 300px; width: 300px;\\\"></div>");
+
+          /// translate echarts Swiper
+          let spanCompSwiperUse1 = $("#spanCompSwiper1").text();
+
+          let div = $div.get(0);
+          let interval;
+
+          /// create container interval
+          function updateContainerInterval() {
+            let $container = $("#toBeAppended");
+            if ($container.length > 0) {
+              $container.append($div);
+              chart1 = echarts.init(div);
+              updateChart2(chart1);
+            }
+          };
+
+          /// start container interval
+          interval = setInterval(updateContainerInterval, 1000);
+
+          /// update color
+          function updateColorCompany1() {
+
+            const colorblackwhite = toggleColorEcharts1 ? "#fafac0" : "#242832";
+            const bluetransp = toggleColorEcharts1 ? "#40bcac" : "transparent";
+            const blackTextBorder = toggleColorEcharts1 ? "#020202" : "transparent";
+
+            chart1.setOption({
+              title: { textStyle: { color: colorblackwhite,
+              textBorderColor: blackTextBorder } },
+              series: [{
+                axisTick: { lineStyle: { color: colorblackwhite } },
+                splitLine: { lineStyle: { color: colorblackwhite,
+                shadowColor: bluetransp } },
+                axisLabel: { color: colorblackwhite, textBorderColor: blackTextBorder },
+                anchor: { itemStyle: { shadowColor: bluetransp } }
+              }]
+            });
+
+          }
+
+          /// update echarts 1
+          function updateChart1(chart, value1, spanCompSwiperUse1) {
+            let option = {
+              title: {
+                text: spanCompSwiperUse1,
+                top: 111,
+                itemGap: 40,
+                left: "center",
+                textStyle: {
+                  color: "#242832",
+                  fontSize: 14,
+                  fontFamily: "Lato",
+                  fontWeight: "normal",
+                  textBorderWidth: 1,
+                  textBorderColor: "transparent"
+                }
+              },
+              series: [
+              {
+                type: "gauge",
+                min: 0,
+                max: 100,
+                radius: "75%",
+                axisLine: {
+                  lineStyle: {
+                    opacity: 0
+                  }
+                },
+                splitLine: {
+                  lineStyle: {
+                    width: 3,
+                    color: "#242832",
+                    shadowBlur: 10,
+                    shadowColor: "transparent"
+                  }
+                },
+                axisTick: {
+                  lineStyle: {
+                    width: 2,
+                    color: "#242832"
+                  }
+                },
+                axisLabel: {
+                  distance: 15,
+                  fontSize: 14,
+                  fontStyle: "italic",
+                  color: "#242832",
+                  textBorderWidth: 1,
+                  textBorderColor: "transparent"
+                },
+                anchor: {
+                  show: true,
+                  size: 25,
+                  itemStyle: {
+                    borderColor: "#020202",
+                    borderWidth: 2
+                  }
+                },
+                pointer: {
+                  offsetCenter: [0, "10%"],
+                  icon: "path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z",
+                  length: "90%",
+                  itemStyle: {
+                    borderWidth: 1,
+                    borderColor: "#020202",
+                    shadowOffsetX: 4,
+                    shadowOffsetY: 4,
+                    shadowColor: "#020202",
+                    shadowBlur: 10,
+                  }
+                },
+
+                 data: [{
+                   value: value1,
+                   pointer: {
+                     itemStyle: {
+                       color: "#dd4b39"
+                     }
+                   },
+                    title: {
+                      show: false
+                    },
+                    detail: {
+                      valueAnimation: true,
+                      backgroundColor: "#cbd171",
+                      color: "#020202",
+                      borderWidth: 2,
+                      fontWeight: "bold",
+                      borderColor: "#020202",
+                      fontFamily: "DS-Digital",
+                      fontSize: 16,
+                      borderRadius: 3,
+                      width: 50,
+                      height: 16,
+                      padding: 2,
+                      shadowBlur: 6,
+                      shadowColor: toggleColorEcharts1 ? "#858383" : "transparent",
+                      offsetCenter: ["0", "30%"],
+                      formatter: function(value) {
+                        return value.toFixed(1)+"%";
+                      }
+                    }
+                  }]
+                },
+                {
+                type: "gauge",
+                axisLine: {show: false},
+                axisTick: {show: false},
+                splitLine: {show: false},
+                axisLabel: {show: false},
+                 pointer: {
+            show: false
+          },
+          title: {
+            show: false
+          },
+          anchor: {
+            show: true,
+            size: 14,
+            itemStyle: {
+              color: "#f00",
+              borderColor: "#020202",
+              borderWidth: 1
+            }
+          }
+                }
+                ]
+              };
+
+              chart.setOption(option);
+
+              /// update color
+              updateColorCompany1();
+
+            };
+
+            /// update echarts 2
+            function updateChart2(chart) {
+              let value1 = Number($("#slideruphelp1").val());
+              let spanCompSwiperUse1 = $("#spanCompSwiper1").text();
+              updateChart1(chart, value1, spanCompSwiperUse1);
+
+              /// click event
+              chart.off("click").on("click", { seriesIndex: 0 }, function(params) {
+                alert("EACH");
+              });
+            };
+
+            function colorEchartsSwiper() {
+              toggleColorEcharts1 = !toggleColorEcharts1;
+              updateChart2(chart1);
+            };
+
+            $("#drkThmSwp1").on("click", function() {
+              colorEchartsSwiper();
+            });
+
+            /// change language select language change
+            $("#switchLanguage").on("changed.bs.select", function() {
+              togglePseudoLangSwiper = !togglePseudoLangSwiper;
+              updateChart2(chart1);
+              setTimeout(function() {
+                updateChart2(chart1);
+              }, 2000);
+            });
+
+            /// update echarts with change event
+            $("#slideruphelp1").on("change", function () {
+              updateChart2(chart1);
+            });
+
+            /// start echarts
+            updateChart2(chart1);
+
+           });
+
+           </script>'
+      )),
+
+      # START fake div to init app----
+      HTML(paste0(
+        "<!--use in intro modal (server)-->
+        <div id='removeFakeDivInit' style='min-height: 100vh;
+        display: flex; align-items: center; justify-content: center;'>
+        <button id='fakeButtonInitPage' style='display: none;'></button>
+        <div id='echartsPageInit' style='height: 650px; width: 700px; display: none;'></div>
+        </div>
+
+        <!--translate initializing-->
+        <span id='initializingSpan' class='elementNonne'>", i18n$t("Initializing..."), "</span>
+
+        <script>
+        $(document).ready(function() {
+
+        const echartsPageInitUse = echarts.init(document.getElementById('echartsPageInit'));
+
+        function updateInitializing1(valueTo100, initializingSpanUse) {
+    let option = {
+      series: [{
+        type: 'gauge',
+        min: 0,
+        max: 100,
+        axisLabel: {
+          fontSize: 40,
+          color: '#242832',
+          fontFamily: 'D-DIN'
+        },
+        axisLine: {
+          lineStyle: {
+            color: [[1, '#242832']]
+          }
+        },
+        axisTick: {
+          show: false
+        },
+        splitLine: {
+          length: 15,
+          lineStyle: {
+            color: '#242832'
+          }
+        },
+        progress: {
+          show: true,
+          roundCap: true,
+          width: 10,
+          itemStyle: {
+            color: '#49a6de'
+          }
+        },
+        anchor: {
+          show: true,
+          size: 25,
+          itemStyle: {
+            borderColor: '#020202',
+            borderWidth: 2
+          }
+        },
+        pointer: {
+          offsetCenter: [0, '10%'],
+          icon: 'path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z',
+          length: '90%',
+          itemStyle: {
+            color: '#49a6de',
+            borderWidth: 1,
+            borderColor: '#020202',
+            shadowOffsetX: 4,
+            shadowOffsetY: 4,
+            shadowColor: '#020202',
+            shadowBlur: 10
+          }
+        },
+        title: {
+          fontSize: 21,
+          color: '#242832',
+          offsetCenter: ['0%', '48%'],
+          fontFamily: 'Lato'
+        },
+        detail: {
+          valueAnimation: true,
+          backgroundColor: '#cbd171',
+          color: '#020202',
+          borderWidth: 2,
+          fontWeight: 'bold',
+          borderColor: '#242832',
+          fontSize: 30,
+          borderRadius: 3,
+          width: 70,
+          height: 16,
+          padding: 8,
+          fontFamily: 'DS-Digital',
+          offsetCenter: ['0%', '61%'],
+          formatter: function(params) {
+            return params.toFixed(1) + '%';
+          }
+        },
+        data: [{
+          name: initializingSpanUse,
+          value: valueTo100
+        }]
+      },
+      {
+        type: 'gauge',
+        axisLabel: {
+          show: false
+        },
+        axisLine: {
+          show: false
+        },
+        axisTick: {
+          show: false
+        },
+        splitNumber: {
+          show: false
+        },
+        anchor: {
+          show: true,
+          size: 14,
+          itemStyle: {
+            color: '#f00',
+            borderColor: '#020202',
+            borderWidth: 1
+          }
+        },
+        pointer: {
+          show: false
+        }
+      }
+      ]
+    };
+
+      echartsPageInitUse.setOption(option);
+    };
+
+          /// init value is 0
+          updateInitializing1(0);
+
+          /// server HTML tags works with this JS method
+      document.getElementById('fakeButtonInitPage').onclick = function() {
+
+        let currentValue = 0;
+        let targetValue = 100;
+        let animationDuration = 5000;
+        let updateInterval = 300;
+        let initializingSpanUse = document.getElementById('initializingSpan').innerText;
+
+        let steps = Math.ceil(animationDuration / updateInterval);
+        let increment = targetValue / steps;
+
+        let intervalId = setInterval(function() {
+          currentValue += increment;
+          if (currentValue >= targetValue) {
+            currentValue = targetValue;
+            clearInterval(intervalId);
+          }
+          updateInitializing1(currentValue, initializingSpanUse);
+        }, updateInterval);
+      };
+
+        });
+          </script>"
+      )),
+      # END fake div to init app----
+
+      # START DROPDOWN tags$div()----
+      div(
+
+        style = "margin-top: 90px; margin-left: 4%;",
+
+        actionButton(
+          inputId = "falseIcon",
+          label = NULL,
+          icon = icon("smile"),
+          style = "display: none;"
+        ),
+
+        # START shinyWidgets::dropdown()----
+        dropdown(
+
+          inputId = "dropStartContainer1",
+          style = "simple",
+          label = NULL,
+          options = list(container = "body"),
+          status = "primary", width = "900px",
+          animate = animateOptions(enter = "bounceInLeft", exit = "bounceOutLeft", duration = 1.5),
+          # see more: https://acchou.github.io/html-css-cheat-sheet/animation.html
+
+          # DROPDOWN STYLE----
+          HTML(
+            "<script>
+          /// click on the gauge
+          $(function() {
+            $('#dropStartContainer1').one('click', function() {
+            setTimeout(function() {
+              $('#buttondropgauge1').trigger('click');
+              }, 2000);
+            });
+          });
+
+          /// dropdown config
+          $(document).ready(function() {
+            /// button
+            $('#dropStartContainer1.bttn-simple.bttn-primary').addClass('buttonStartContainer1');
+            /// add id in container
+            $('.sw-dropdown-in:eq(0)').css('height','415px').attr('id', 'dropStartContainer1');
+          });
+
+          /// button delay new click
+          $(document).ready(function() {
+            $('#dropStartContainer1').on('click', function() {
+              $(this).attr('disabled', true);
+              setTimeout(function() {
+                $('#dropStartContainer1').attr('disabled', false);
+              }, 2000);
+            });
+          });
+          </script>
+
+          <style>
+          /*button style*/
+          .buttonStartContainer1 {
+            background: transparent !important;
+            border: none !important;
+            position: fixed;
+            border-radius: 100%;
+            z-index: 2;
+            margin-top: -83px;
+            width: 55px;
+            height: 55px;
+            left: 5%;
+          }
+
+          .buttonStartContainer1:hover {
+            background-color: transparent !important;
+            color: transparent !important;
+          }
+
+          .buttonStartContainer1:before {
+            background-color: transparent !important;
+          }
+
+          .buttonStartContainer1:after {
+            background-color: transparent !important;
+          }
+
+          /*container box-shadow dropdown*/
+          #sw-content-dropStartContainer1 {
+            position: fixed;
+            margin-top: 12px;
+            background-color: #fafac0;
+            border: 3px solid #49a6de;
+            box-shadow: 0 0 10px 3px #40bcac;
+          }
+
+          /*ajustar tamanho maximo para o pickerInput nao ultrapassar quando abrir la embaixo*/
+          #dropStartContainer1.sw-dropdown-in {
+            background-color: #fafac0;
+            border-radius: 10px !important;
+            max-height: 415px;
+          }
+
+          /*dropdown after top*/
+          #dropStartContainer1:after {
+            content: \"\";
+            position: absolute;
+            top: 0;
+            left: 0; /* Ajuste o valor para o espaço entre o retângulo e a borda */
+            width: 100%; /* Largura do retângulo */
+            height: 40px;
+            background-color: #49a6de;
+            border-radius: 8px;
+          }
+          </style>"
+          ),
+
+          # DROPDOWN CONTENT----
+
+          # START MAIN DIV DROPDOWN----
+          HTML(
+            "<!--START MAIN DIV (XXXdrop)-->
+          <div class='gridClass'>"
+          ),
+
+          # START TITLE AND ODOMETERS DROPDOWN HEADER----
+          HTML(paste0(
+            "<style>
+          [id^='odometerDrop'].odometer.odometer-theme-default .odometer-digit,
+          [id^='odometerDrop'] .odometer-formatting-mark,
+          [class^='billContribClass'] {
+            color: #fafac0 !important;
+            font-family: 'D-DIN' !important;
+            font-weight: bold;
+            font-size: 16px;
+          }
+          </style>
+
+          <script>
+          /// billing dropdown header odometer
+          $(document).ready(function() {
+
+            /// odometer current quant
+            let placement1 = document.getElementById('odometerDrop1');
+            let seconds1 = $('#odometerDrop1').data('seconds1');
+            let speed1 = (1 / seconds1);
+
+            let jackpotOdometer1 = new Odometer({
+              el: placement1,
+              value: 15000,
+              format: '(,ddd).dd',
+              theme: 'default'
+            });
+
+            jackpotOdometer1.render();
+
+            // Atualizar o Odometer com base no valor do input range
+            function updateOdometer1(value) {
+              jackpotOdometer1.update(value);
+            }
+
+            // onchange set a value for #odometerContribChange
+            $('#howmuch1, #howquant1').on('input', function() {
+              let howMuchContribUse = parseFloat($('#howmuch1').val().replace(/[^0-9.-]+/g,''));
+              let howQuantContribUse = parseFloat($('#howquant1').val().replace(/[^0-9.-]+/g,''));
+              let resultContribOdometer = howMuchContribUse * howQuantContribUse;
+              let valor = resultContribOdometer;
+              updateOdometer1(valor);
+            });
+
+          });
+
+          /// contribution
+          $(document).ready(function() {
+
+            /// odometer current quant
+            let placement2 = document.getElementById('odometerDrop2');
+            let seconds2 = $('#odometerDrop2').data('seconds2');
+            let speed2 = (1 / seconds2);
+
+            let jackpotOdometer2 = new Odometer({
+              el: placement2,
+              value: 7500,
+              format: '(,ddd).dd',
+              theme: 'default'
+            });
+
+            jackpotOdometer2.render();
+
+            function updateOdometer2(value) {
+              jackpotOdometer2.update(value);
+            }
+
+            $('#howquant1, #howmuch1, #howearn1').on('input', function() {
+              // onchange set a value for #odometerContribChange
+              let howMuchContribUse = parseFloat($('#howearn1').val().replace(/[^0-9.-]+/g,''));
+              let howQuantContribUse = parseFloat($('#howquant1').val().replace(/[^0-9.-]+/g,''));
+              let resultContribOdometer = howMuchContribUse * howQuantContribUse;
+              let valorContrib = resultContribOdometer;
+              updateOdometer2(valorContrib);
+            });
+
+          });
+          </script>
+
+          <!--START TITLE AND ODOMETERS DROPDOWN HEADER-->
+          <div style='grid-column: span 12;'>
+
+          <!--fake inputs billing/ contrib-->
+          <div class='elementNone'>
+          <input id='odometerBillingChange' type='number' value='7500'>
+          <input id='odometerContribChange' type='number' value='15000'>
+          </div>
+
+          <!--start odometer billing-->
+          <div style='position: absolute; color: #fafac0;
+          margin-top: 2px; left: 2.5%; z-index: 1;'>
+
+          <span style='font-size: 16px; font-weight: bold;
+          position: relative; top: -1px;'>",
+            i18n$t("Billing: "),
+            "</span>
+
+          <span class='billContribClass'>",
+            i18n$t("US$"),
+            "</span>
+
+          <!--odometer billing-->
+          <div id='odometerDrop1' style='position: relative; top: -1px;'></div>
+
+          </div>
+          <!--end odometer billing dropdown-->
+
+          <!--start odometer contribution-->
+          <div style='position: absolute; color: #fafac0;
+          margin-top: 2px; right: 2.5%; z-index: 1;'>
+
+          <span style='font-size: 16px; font-weight: bold;
+          position: relative; top: -1px;'>",
+            i18n$t("Contribution: "),
+            "</span>
+
+          <span class='billContribClass'>",
+            i18n$t("US$"),
+            "</span>
+
+          <!--odometer contrib-->
+          <div id='odometerDrop2' style='position: relative; top: -1px;'></div>
+
+          </div>
+          <!--end odometer contribution-->
+
+          <!--END TITLE AND ODOMETERS DROPDOWN HEADER-->
+          </div>"
+          )),
+          # END TITLE AND ODOMETERS DROPDOWN HEADER----
+
+          # START AUTONUMERICINPUTS DROPDOWN DIV----
+          HTML(
+            "<!--START DROPDOWN AUTONUMERIC INPUTS-->
+          <div style='grid-column: span 12; margin-top: 38px; margin-bottom: -6px;'>
+          <div class='gridClass' style='grid-gap: 15px;'>"
+          ),
+
+          # <A> howearn1----
+          div(
+
+            style = "grid-column: span 4; cursor: not-allowed;",
+
+            autonumericInput(
+              inputId = "howearn1",
+              label = HTML(paste0(
+                "<script>
+                                function atualizarCampo() {
+                                  let howmuch1Value = parseFloat($('#howmuch1').val().replace(/[^0-9.-]+/g,''));
+                                  let slideruphelp1Value = Number($('#slideruphelp1').val());
+                                  let resultado = howmuch1Value * (slideruphelp1Value / 100);
+                                  $('#howearn1').val(resultado.toFixed(2));
+                                }
+                                </script>
+                                <i class='fas fa-hand-holding-dollar' style='color: #49a6de;'></i>
+                                <span class='inputLabelClass'>", i18n$t("HOW MUCH DO YOU EARN?"), "</span>"
+              )),
+              value = 5,
+              align = "center",
+              minimumValue = .01,
+              digitGroupSeparator = ",",
+              decimalCharacter = ".",
+              decimalPlaces = 2,
+              currencySymbol = "US$",
+              currencySymbolPlacement = "p",
+              style = "border: 2px solid #49a6de;
+                border-radius: 5px; background-color: #afeabc;
+                color: #242832; margin-top: -3px; padding-top: 8px;
+                pointer-events: none;",
+              watchExternalChanges = TRUE
+            )
+
+          ),
+
+          # <A> howmuch1----
+          div(
+
+            style = "grid-column: span 4;",
+
+            autonumericInput(
+              inputId = "howmuch1",
+              label = HTML(paste0(
+                "<script>
+                                /// event listener to autonumeric.js
+                                $(function() {
+                                  class Foo {
+                                    constructor(idElement) {
+                                        this.element = document.querySelector(idElement);
+                                        this.element.addEventListener('input', () => {
+                                            atualizarCampo();
+                                            $('#howearn1').trigger('input');
+                                        });
+                                    }
+                                }
+                                 const howmuch1 = new Foo('#howmuch1');
+                                });
+                                </script>
+
+                                <style>
+                                 #autoshadow2 .form-control:focus {
+                                   box-shadow: 0 0 10px 2px #40bcac !important;
+                                 }
+                                 </style>
+
+                                 <i class='fas fa-money-bill-transfer' style='color: #49a6de;'></i>
+                                 <span class='inputLabelClass'>", i18n$t("HOW MUCH DO YOU SELL FOR?"), "</span>"
+              )),
+              value = 10,
+              align = "center",
+              minimumValue = .01,
+              digitGroupSeparator = ",",
+              decimalCharacter = ".",
+              decimalPlaces = 2,
+              currencySymbol = "US$",
+              currencySymbolPlacement = "p",
+              style = "border: 2px solid #49a6de;
+              border-radius: 5px; background-color: inherit;
+              margin-top: -3px; outline: solid 1px #85838399;
+              outline-offset: -4px; padding-top: 8px;"
+            )
+
+          ),
+
+          # <A> quant----
+          div(
+
+            style = "grid-column: span 4;",
+
+            autonumericInput(
+              inputId = "howquant1",
+              label = HTML(paste0(
+                "<style>
+                   #autoshadow1 .form-control:focus {
+                     box-shadow: 0 0 10px 2px #40bcac !important;
+                   }
+                   </style>
+                   <span class='inputLabelClass'>
+                   <i class='fas fa-dolly' style='color: #49a6de;'></i> ",
+                i18n$t("(AVERAGE) QUANTITY SOLD"), "</span>"
+              )),
+              value = 1500,
+              align = "center",
+              minimumValue = .01,
+              maximumValue = 1000000000,
+              digitGroupSeparator = ",",
+              decimalCharacter = ".",
+              decimalPlaces = 0,
+              currencySymbol = " units",
+              currencySymbolPlacement = "s",
+              style = "border: 2px solid #49a6de;
+            border-radius: 5px; background-color: inherit;
+            margin-top: -3px; outline: solid 1px #85838399;
+            outline-offset: -4px; padding-top: 8px;"
+            )
+
+          ),
+
+          # END AUTONUMERICINPUTS DROPDOWN DIV----
+          HTML(
+            "<!--END DROPDOWN AUTONUMERIC INPUTS-->
+          </div>
+          </div>"
+          ),
+
+          # START SWIPER DROPDOWN----
+          HTML(paste0(
+            "<div style='grid-column: span 7; margin-left: -84px;'>
+          <div class='gridClass'>
+
+          <div class='cubeAdvantageSliderDrop1' style='grid-column: span 12; position: absolute;'>
+
+          <div class='cubeInnerAdvantageSliderDrop1'>
+
+          <div class='frontAdvantageSliderDrop1'>",
+            uiOutput(outputId = "outSwiperDrop"),
+            "</div>
+
+          <!--start back side-->
+          <div class='backAdvantageSliderDrop1'>
+          <div id='chartDropThreePage' style='height: 400px;
+          width: 600px; margin: -380px 0 0 64px;'></div>
+          </div>
+          <!--end back side-->
+
+          </div>
+          </div>
+          </div>
+          </div>"
+          )),
+
+          # universalTransition Drop Page1----
+          div(
+
+            HTML(paste0(
+              "<!--INPUTS AND TRANSLATE-->
+              <div style='display: none;'>
+
+              <!--INPUTS-->
+              <input id='quantBarEcharts' type='number'
+              min='0' max='999999999999999999999999999999'>
+
+              <!--new discount quantity (simple)-->
+              <input id='quantBarEchartsDisc' type='number'
+              min='0' max='999999999999999999999999999999'>
+
+              <!--new discount quantity (adj)-->
+              <input id='quantBarEchartsAdjDisc' type='number'
+              min='0' max='999999999999999999999999999999'>
+
+              <!--new increase quantity (simple)-->
+              <input id='quantBarEchartsSimpleInc' type='number'
+              min='0' max='999999999999999999999999999999'>
+
+              <!--new increase quantity (adj)-->
+              <input id='quantBarEchartsAdjInc' type='number'
+              min='0' max='999999999999999999999999999999'>
+
+              <!--PERCENT-->
+              <!--discount percent (simple)-->
+              <input id='percentBarEchartsDisc' type='number'
+              min='0' max='999999999999999999999999999999'>
+
+              <!--discount percent (adj)-->
+              <input id='percentBarEchartsAdjDisc' type='number'
+              min='0' max='999999999999999999999999999999'>
+
+              <!--increase percent (simple)-->
+              <input id='percentBarEchartsInc' type='number'
+              min='0' max='999999999999999999999999999999'>
+
+              <!--increase percent (adj)-->
+              <input id='percentBarEchartsAdjInc' type='number'
+              min='0' max='999999999999999999999999999999'>
+
+              <input id='contributionHTML1' type='number'>
+
+              <input id='reacStartChartInput1' type='number'>
+
+              <!--TRANSLATE-->
+              <span id='quantVarTranslate'>", i18n$t("QUANTITY VARIATION"), "</span>
+              <span id='quantYaxisTranslate'>", i18n$t("Quantity"), "</span>
+              <span id='typeChangeTranslate'>", i18n$t("Change type"), "</span>
+
+              <!--TRANSLATE AWN NOTIFY-->
+              <span id='getMessageToolEch'>", i18n$t("Check the graph and see the change to "), "</span>
+
+              </div>
+
+              <style>
+              #inputRangeDropToolt:active {
+                cursor: grabbing !important;
+              }
+
+              #tooltipOutputChange {
+                font-family: 'D-DIN' !important;
+                background-color: #020202;
+                border: 2px solid #858383;
+                border-radius: 5px;
+                color: #ff7500;
+                font-size: 20px;
+                display: block;
+                margin: auto;
+                text-align: center;
+                padding-top: 1px;
+                height: 28px;
+              }
+
+              #applyToolEch:active {
+                background-color: lime !important;
+              }
+
+              #changeMaxDivTool {
+                font-family: 'D-DIN' !important;
+              }
+
+              </style>
+
+              <script>
+
+              /// echarts init
+              const chartDropThreePageUse = echarts.init(document.getElementById('chartDropThreePage'));
+
+              /// sector colors
+              const colorPaletteDropThird = ['#c580e8', '#ddb3f2', '#d1a40d', '#c9b677'];
+
+              /// piePlot dataset and vars
+              const datasetPie = {
+                source: [
+                  {name: 'DISCOUNT', value: 54},
+                  {name: 'DISCOUNT adj', value: 78},
+                  {name: 'INCREASE', value: 29},
+                  {name: 'INCREASE adj', value: 40}
+                ]
+              };
+
+              /// barPlot dataset and vars
+
+                let sliderValueThreeDrop = 0;
+
+                /// color plot
+                function updateColorDropUniTransBar() {
+
+                  let changeColorDrop1 = toggleColorEchartsDrop ? '#fafac0' : '#242832';
+                  let changeColorDrop2 = toggleColorEchartsDrop ? '#020202' : 'transparent';
+
+                  chartDropThreePageUse.setOption({
+
+                    title: [{ textStyle: { color: changeColorDrop1, textBorderColor: changeColorDrop2 } }],
+                    xAxis: { nameTextStyle: { color: changeColorDrop1, textBorderColor: changeColorDrop2 } },
+                    yAxis: { nameTextStyle: { color: changeColorDrop1, textBorderColor: changeColorDrop2 } }
+
+                  });
+
+                };
+
+                //////////////////////////////////// pieOption
+                pieOption = {
+
+                dataset: [datasetPie],
+
+                  legend: {
+                    type: 'plain', // or 'scroll' if necessary
+                    top: '50%',
+                    left: '171',
+                    orient: 'vertical',
+                    itemGap: 8,
+                    selectedMode: true,
+                    inactiveColor: '#f00',
+                    borderWidth: 2,
+                    borderColor: '#858383',
+                    borderRadius: 5,
+                    shadowBlur: 10,
+                    shadowColor: '#49a6de',
+                    itemStyle: {
+                      borderWidth: 2,
+                      borderColor: '#858383'
+                    },
+                    textStyle: {
+                      color: '#858383'
+                    }
+                  },
+
+                            title: [{
+            text: 'Proportion',
+            left: 166,
+            top: 170
+          }],
+
+              tooltip: {
+              show: true,
+              trigger: 'item',
+              formatter: function (params) {
+
+              let name = params.name;
+              let value = params.value.value;
+              let color = params.color;
+
+              return '<div style=\"display: grid; grid-template-columns: repeat(12, 1fr);\\
+              grid-gap: 15px; padding: 5px; background-color:'+color+'88;\\
+              white-space: pre-wrap;\">\\
+              <div style=\"grid-column: span 12; color: #020202;\\
+              display: block; margin: auto; text-align: center;\">\\
+              <strong>'+name+'</strong>\\
+              <hr style=\"border-top: 1px solid #020202;\"></div>\\
+              <div style=\"grid-column: span 6;\">' + value + '</div>\\
+              </div>'
+            }
+          },
+          series: [
+            {
+              type: 'pie',
+              id: 'myIdChart1',
+              center: ['38.5%','59.8%'],
+              radius: ['50%', '72%'],
+              avoidLabelOverlap: false,
+              label: {
+                show: false
+              },
+              emphasis: {
+              label: {
+                show: false
+              }
+                },
+                itemStyle: {
+                  normal: {
+                    color: function(params) {
+                      return colorPaletteDropThird[params.dataIndex];
+                    },
+                    borderRadius: 7
+                  },
+                  emphasis: {
+                    shadowBlur: 20,
+                    shadowColor: 'orange'
+                  }
+                },
+                universalTransition: true,
+                animationDurationUpdate: 1000
+                }
+                ],
+                roseType: 'radius'
+                };
+
+                /// bar Plot Drop
+
+      function switchToBarOptionInit(
+      quantVarTranslateUse, typeChangeTranslateUse, quantYaxisTranslateUse,
+      quantBarEchartsUse, datasetBar, datasetBarPercent) {
+
+                  let option = {
+
+                    dataset: datasetBar,
+
+                    title: [{
+                        text: quantVarTranslateUse,
+                        left: 230,
+                        top: 98,
+                        textStyle: {
+                          fontFamily: 'Lato',
+                          fontSize: 18,
+                          color: '#242832',
+                          textBorderWidth: 1,
+                          textBorderColor: 'transparent'
+                        }
+                    }],
+
+                    legend: [{
+                      show: false
+                    }],
+
+                    tooltip: [{
+                      show: true,
+                      confine: 'true',
+                      triggerOn: 'click',
+                      enterable: true,
+                      position: 'inside',
+                      extraCssText: 'padding: 0; z-index: 2;',
+                    }],
+
+                /// diâmetro do grafico
+                grid: [{
+                  top: 145,
+                  left: 50,
+                  right: 155,
+                  bottom: 45,
+                  containLabel: true
+                }],
+
+    xAxis: [{
+      type: 'category',
+      name: quantYaxisTranslateUse,
+      nameLocation: 'middle',
+      nameGap: 40,
+      nameTextStyle: {
+        fontSize: 18,
+        color: '#333333',
+        fontFamily: 'Lato',
+        textBorderWidth: 1,
+        textBorderColor: 'transparent'
+      },
+      axisLabel: {
+        interval: 0,
+        fontSize: 10,
+        margin: 15,
+        fontFamily: 'Lato',
+        backgroundColor: '#020202',
+        color: '#f2f2f2',
+        padding: 3,
+        borderWidth: 2,
+        borderColor: '#858383',
+        borderRadius: 10
+      },
+      axisTick: {
+        length: 10,
+        lineStyle: {
+          width: 2.5,
+          color: '#858383'
+        }
+      }
+    }],
+
+    yAxis: [{
+      type: 'value',
+        name: typeChangeTranslateUse,
+        nameLocation: 'middle',
+        nameGap: 55,
+        nameTextStyle: {
+          fontSize: 18,
+          color: '#333333',
+          fontFamily: 'Lato',
+          textBorderWidth: 1,
+          textBorderColor: 'transparent',
+        },
+        splitLine: {
+          lineStyle: {
+            color: '#858383'
+          }
+        },
+        axisLabel: {
+          fontSize: 12,
+          fontFamily: 'Lato',
+          backgroundColor: '#020202',
+          color: '#f2f2f2',
+          padding: 3,
+          borderWidth: 2,
+          borderColor: '#858383',
+          borderRadius: 10,
+          formatter: function (value) {
+            if (value > 99999) {
+              if (value >= 1e12) {
+                return (value / 1e12).toFixed(1).replace(/\\.0$/, '') + 'T';
+              } else if (value >= 1e9) {
+                return (value / 1e9).toFixed(1).replace(/\\.0$/, '') + 'B';
+              } else if (value >= 1e6) {
+                return (value / 1e6).toFixed(1).replace(/\\.0$/, '') + 'M';
+              } else if (value >= 1e3) {
+                return (value / 1e3).toFixed(1).replace(/\\.0$/, '') + 'K';
+              } else {
+                return value.toFixed(0).replace(/\\B(?=(\\d{3})+(?!\\d))/g, '.');
+              }
+            } else {
+              return value.toFixed(0).replace(/\\B(?=(\\d{3})+(?!\\d))/g, '.');
+            }
+          }
+        }
+      }],
+
+          emphasis: {
+      label: {
+        rotate: 30,
+        fontSize: 18,
+        shadowBlur: 30,
+        shadowColor: '#020202'
+      }
+    },
+
+              series: [{
+                id: 'myIdChart1',
+                type: 'bar',
+
+                universalTransition: true,
+                animationDurationUpdate: 1000,
+
+                      itemStyle: {
+        normal: {
+          color: function(params) {
+            return colorPaletteDropThird[params.dataIndex];
+          },
+          barBorderRadius: [15, 15, 0 ,0],
+          shadowBlur: 10,
+          shadowOffsetX: 5,
+          shadowOffsetY: 3,
+          shadowColor: '#020202'
+        },
+        emphasis: {
+          shadowBlur: 20,
+          shadowOffsetX: 5,
+          shadowOffsetY: 3,
+          shadowColor: 'orange'
+        }
+      },
+
+          label: {
+
+          show: true,
+                rotate: 0,
+      position: 'top',
+      color: '#020202',
+      fontFamily: 'Lato',
+      backgroundColor: 'inherit',
+      borderRadius: 10,
+      padding: 3,
+      borderWidth: 2,
+      borderColor: '#858383',
+
+            formatter: function(params) {
+            let dataIndex = params.dataIndex;
+            let symbol = dataIndex >= 2 ? '📉' : '📈';
+            return '{a|' + datasetBar.source[dataIndex][1].toLocaleString('en-US') + '}\\n{b|' + symbol + ' ' + datasetBarPercent[dataIndex].value + '%}';
+          },
+
+        // Estilo do rótulo
+        rich: {
+          a: {
+            lineHeight: 15,
+            fontSize: 15,
+            align: 'center'
+          },
+          b: {
+            lineHeight: 15,
+            fontSize: 13,
+            align: 'center'
+          }
+        }
+      },
+
+                      markLine: {
+                      tooltip: {
+                      show: true,
+                      enterable: true,
+                      extraCssText: 'width: 325px; padding: 8px; background-color: #fcc5c5;\\
+                      border: 1px solid #f00; outline: .1em solid #858383; outline-offset: -5px;',
+
+              formatter: function(params) {
+
+                const valueQuant1 = Number($('#quantBarEcharts').val());
+                const valueMoneyContrib1 = Number($('#contributionHTML1').val());
+                const valueChange1 = Number($('#slideruphelp2').val());
+                const valueContrib1 = Number($('#slideruphelp1').val());
+                const valueClient1 = Number($('#slideruphelp3').val());
+
+                $(function() {
+                function updateMeter1(valorChanged) {
+                  $('#meter1').meter({
+                    meter: 'www/meterBack.png',
+                    glass: 'www/meterGlass.png',
+                    width: 100,
+                    height: 100,
+                    level: valorChanged,
+                    minLevel: 0,
+                    maxLevel: 100,
+                    maxAngle: 135.5,
+                    minAngle: -135.5,
+                    useEasing: false,
+                    needlePosition: [50, 50],
+                    needleScale: .60,
+                    needleColour: '#ff7500',
+                    needleShadowColour: '#ff7500',
+                    needleHighlightColour: '#ff7500',
+                    shadowColour: '#ff7500'
+                  });
+                };
+
+                function updateMeter2() {
+                  let valorChanged = Number($('#inputRangeDropToolt').val());
+                  updateMeter1(valorChanged);
+                  $('#meter1').meter('setLevel', valorChanged);
+                };
+
+                $('#inputRangeDropToolt').on('input', function() {
+                  updateMeter2();
+                });
+
+                  updateMeter2();
+                });
+
+                      // Função para atualizar o valor do slider na tooltip e armazenar no localStorage
+                      function updatetooltipOutputChange(value) {
+                        $('#tooltipOutputChange').text(value + '%');
+                        localStorage.setItem('sliderValueThreeDrop', value);
+                      }
+
+                      // Função para recuperar o valor do slider armazenado no localStorage
+                      function retrievesliderValueThreeDrop() {
+                        var savedValue = localStorage.getItem('sliderValueThreeDrop');
+                        if (savedValue !== null) {
+                          $('#inputRangeDropToolt').val(savedValue);
+                          updatetooltipOutputChange(savedValue);
+                        }
+                      }
+
+                      $(document).ready(function() {
+                        // Ao carregar a página, recupera o valor do slider armazenado
+                        retrievesliderValueThreeDrop();
+
+                        // Quando o valor do slider é alterado, atualiza a tooltip e armazena no localStorage
+                        $('#inputRangeDropToolt').on('input', function() {
+                          var sliderValueThreeDrop = $(this).val();
+                          updatetooltipOutputChange(sliderValueThreeDrop);
+                        });
+
+                      });
+
+                      $(function() {
+                        var $gridTooltip = $('.gridTooltip').masonry({
+                          columnWidth: '.gridTooltipEch',
+                          percentPosition: true
+                        });
+                        $(document).on('click', '#applyToolEch', function() {
+                          Shiny.setInputValue('applyToolEch', Math.random(), {priority: 'event'});
+                        });
+
+                        /// awn notification tooltip button
+                        let notifier = new AWN();
+                          $('#applyToolEch').on('click', function() {
+                            setTimeout(function() {
+                              let getMessageToolEchUse = $('#getMessageToolEch').html();
+                              let getMessateToolEchValueUse = parseFloat(slider2.noUiSlider.get());
+                              notifier.success(
+                                '<div><span style=\"color: #020202;\">'+getMessageToolEchUse+'</span><b style=\"color: #124a0f;\">'+getMessateToolEchValueUse+'%</b></div>',
+                                { labels: { success: 'CHANGED!' },
+                                icons: { success: 'fas fa-chart-column' }
+                              });
+                          }, 500);
+                        });
+
+                        /// update max value slider tooltip
+                        function maxValueSliderToolEch() {
+
+                          let value1 = parseFloat(slider1.noUiSlider.get());
+                          let value2 = (value1 - .1).toFixed(1);
+                          document.getElementById('inputRangeDropToolt').setAttribute('max', value2);
+
+                          document.getElementById('changeMaxDivTool').innerText = value2+'%';
+                          document.getElementById('slideruphelp2').addEventListener('input', function() {
+                            document.getElementById('changeMaxDivTool').innerText = this.value;
+                          });
+
+                        }
+
+                        maxValueSliderToolEch();
+
+                        document.getElementById('applyToolEch').addEventListener('click', function() {
+                          let inputRangeDropTooltUse = parseFloat(document.getElementById('inputRangeDropToolt').value);
+                          slider2.noUiSlider.set(inputRangeDropTooltUse);
+                        });
+
+                      });
+
+                        return '<!--START TOOLTIP-->\\
+                          <div class=\"gridTooltip\">\\
+                            <!--each column space width-->\\
+                            <div class=\"gridTooltipEch\" style=\"width: 5%;\"></div>\\
+                            <div style=\"width: 100%; background-color: #f00; padding: 6px; margin-bottom: 6px;\\
+                            color: #f2f2f2; border-radius: 3px; text-align: center; font-weight: bold;\">Initial quantity</div>\\
+                            <div style=\"width: 100%; white-space: pre-wrap; padding: 0 6px; margin-bottom: 6px;\">The initial quantity sold is <b>'+valueQuant1+'</b>. The price change (<b>'+valueChange1+'%</b>), contribution margin (<b>'+valueContrib1+'%</b>), and client adjustment (<b>'+valueClient1+'%</b>) cause changes (up and down) in the initial quantity to be sold to maintain the same contribution margin (<b>R$'+valueMoneyContrib1+'</b>).</div>\\
+                            <div style=\"width: 75%; font-size: 12px; padding-left: 6px;\">Simulate new change:</div>\\
+                            <div style=\"width: 25%;\">\\
+                            <div id=\"meter1\" style=\"position: relative; left: -28px;\"></div>\\
+                            </div>\\
+                            <div style=\"width: 75%; padding-left: 6px; margin-bottom: 6px;\">\\
+                            <input id=\"inputRangeDropToolt\" type=\"range\" min=\"0\" max=\"100\"\\
+                            value=\"'+sliderValueThreeDrop+'\" step=\".1\" style=\"accent-color: #ff7500;\\
+                            cursor: grab; outline: none; width: 85%;\"></div>\\
+                            <div id=\"divToolValueEch1\" style=\"width: 25%; padding-left: 6px;\">\\
+                            <span id=\"tooltipOutputChange\"></span></div>\\
+                            <div style=\"width: 15%; padding-left: 6px;\">\\
+                            <button id=\"applyToolEch\" style=\"background-color: #008019;\\
+                            color: #fafac0; border: 2px solid #858383; border-radius: 4px;\\
+                            outline: none; height: 28px;\"><i class=\"fas fa-circle-play\"></i></button></div>\\
+                            <div style=\"width: 35%;\"><b style=\"color: #f00;\">MAX: </b><b id=\"changeMaxDivTool\"></b></div>\\
+                          </div>';
+                      }
+                    },
+                  label: {
+                    position: 'start',
+                    fontFamily: 'Lato',
+                    backgroundColor: '#dd4b39',
+                    color: '#f2f2f2',
+                    silent: true,
+                    shadowBlur: 10,
+                    shadowColor: '#f00',
+                    fontSize: 13,
+                    padding: 3,
+                    borderWidth: 2,
+                    borderColor: '#858383',
+                    borderRadius: 10,
+
+                    formatter: function (params) {
+                    if (params.value > 99999) {
+                  if (params.value >= 1e12) {
+                    return (params.value / 1e12).toFixed(1).replace(/\\.0$/, '') + 'T';
+                  } else if (params.value >= 1e9) {
+                    return (params.value / 1e9).toFixed(1).replace(/\\.0$/, '') + 'B';
+                  } else if (params.value >= 1e6) {
+                    return (params.value / 1e6).toFixed(1).replace(/\\.0$/, '') + 'M';
+                  } else if (params.value >= 1e3) {
+                    return (params.value / 1e3).toFixed(1).replace(/\\.0$/, '') + 'K';
+                  } else {
+                    return params.value.toFixed(0).replace(/\\B(?=(\\d{3})+(?!\\d))/g, '.');
+                  }
+                } else {
+                  return params.value.toFixed(0).replace(/\\B(?=(\\d{3})+(?!\\d))/g, '.');
+                }
+              }
+              },
+              emphasis: {
+                disabled: true
+              },
+              lineStyle: {
+                color: '#dd4b39',
+                type: 'dashed',
+                width: 2
+              },
+              data: [{
+                yAxis: quantBarEchartsUse
+              }]
+                  }
+
+          }]
+        };
+        chartDropThreePageUse.setOption(option);
+      }
+
+      function switchToBarOption() {
+
+        let quantVarTranslateUse = $('#quantVarTranslate').text();
+        let typeChangeTranslateUse = $('#typeChangeTranslate').text();
+        let quantYaxisTranslateUse = $('#quantYaxisTranslate').text();
+
+        /// marklLine
+        let quantBarEchartsUse = Number($('#quantBarEcharts').val());
+
+        // Obter os valores dos inputs
+        let quantBarEchartsDiscUse = Number($('#quantBarEchartsDisc').val());
+        let quantBarEchartsAdjDiscUse = Number($('#quantBarEchartsAdjDisc').val());
+        let quantBarEchartsSimpleIncUse = Number($('#quantBarEchartsSimpleInc').val());
+        let quantBarEchartsAdjIncUse = Number($('#quantBarEchartsAdjInc').val());
+
+        // Atualizar o dataset com os novos valores
+        let datasetBar = {
+          'source': [
+            ['DISCOUNT', quantBarEchartsDiscUse],
+            ['DISCOUNT adj', quantBarEchartsAdjDiscUse],
+            ['INCREASE', quantBarEchartsSimpleIncUse],
+            ['INCREASE adj', quantBarEchartsAdjIncUse]
+          ]
+        };
+
+        /// percent (simple)
+        let percentBarEchartsDiscUse = Number($('#percentBarEchartsDisc').val());
+        let percentBarEchartsIncUse = Number($('#percentBarEchartsInc').val());
+
+        /// percent (adjusted)
+        let percentBarEchartsAdjDiscUse = Number($('#percentBarEchartsAdjDisc').val());
+        let percentBarEchartsAdjIncUse = Number($('#percentBarEchartsAdjInc').val());
+
+        let datasetBarPercent = [{
+            value: percentBarEchartsDiscUse
+          },
+          {
+            value: percentBarEchartsAdjDiscUse
+          },
+          {
+            value: percentBarEchartsIncUse
+          },
+          {
+            value: percentBarEchartsAdjIncUse
+          }
+        ];
+
+        switchToBarOptionInit(
+        quantVarTranslateUse, quantYaxisTranslateUse, typeChangeTranslateUse,
+        quantBarEchartsUse, datasetBar, datasetBarPercent);
+        updateColorDropUniTransBar();
+      }
+
+      // Chama a função para exibir o gráfico
+      switchToBarOption();
+
+    function switchToPieOption() {
+      option = pieOption;
+      chartDropThreePageUse.setOption(option, true);
+    }
+
+    document.getElementById('chartDropThreePage').addEventListener('change', function(event) {
+      if (event.target.id === 'inputRangeDropToolt') {
+        sliderValueThreeDrop = event.target.value; // Atualiza o valor do slider
+      }
+    });
+
+    /// Inputs barPlot
+    $('[id^=\"quantBarEcharts\"], [id^=\"percentBarEcharts\"]').on('change', function() {
+
+      switchToBarOption();
+
+    });
+
+        </script>"
+            )
+
+            )),
+
+          # END SWIPER DROPDOWN----
+
+          # START VISOR/ GAUGES DROPDOWN----
+          HTML(paste0(
+            "<style>
+          #visorDropGauge1 {
+            --w: min(250px, 23vw);
+            --r: calc(var(--w) / 1);
+            --x: calc(var(--w) / 2);
+            /* the amount to displace the mask */
+            display: flex;
+            flex-direction: row;
+            gap: min(20px, calc((100vw - (3 * var(--w))) / 1));
+            position: absolute;
+            width: 100%;
+          }
+
+          #boxDropGauge1 {
+            aspect-ratio: 4 / 1;
+            width: var(--w);
+            border-radius: 5px;
+            background-image: url('www/screenGauge.jpg');
+            z-index: 1;
+            top: 103px;
+            left: -40px;
+            height: 100px;
+            position: absolute;
+          }
+
+          #boxDropGauge1:nth-child(1) {
+            -webkit-mask-image: radial-gradient(circle at calc(var(--w) + var(--x)), transparent var(--r), black var(--r));
+          }
+
+          <!--limemeter-->
+          #gaugemeterline {
+            text-align: center;
+            display: inline-block;
+            margin: 0 auto !important;
+          }
+
+          #gaugemeterline svg polyline {
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+          }
+
+          #gaugemeterline svg polyline#back {
+            fill: none;
+            stroke: #ff4d5033;
+          }
+
+          #gaugemeterline svg polyline#front {
+            fill: none;
+            stroke: #ff4d4f;
+            stroke-dasharray: 48, 144;
+            stroke-dashoffset: 192;
+            animation: dash_682 2.5s linear infinite;
+          }
+
+          @keyframes dash_682 {
+            72.5% {
+            opacity: 0;
+          }
+
+          to {
+            stroke-dashoffset: 0;
+          }
+          }
+          </style>
+
+          <!--START DROP SWIPER AND GAUGES DIV (XXXdrop)-->
+          <div style='grid-column: span 5; margin-left: 490px;'>
+          <div class='gridClass'>
+
+          <!--START STATUS VISOR DIV-->
+          <div id='visorDropGauge1' style='pointer-events: none; z-index: -2;'>
+          <div id='boxDropGauge1' style='color: #fafac0; border: 2px solid #242832;'>
+          <div style='padding-left: 3px; padding-top: 3px; pointer-events: none;
+          background-image: linear-gradient(to right, #858383, #242832); display: flex;
+          color: #fafac0; font-weight: bold; font-style: italic;'>BALANCE:
+          <div style='font-size: 12px; margin-left: 2px; margin-top: 0; top: 3px;'>
+
+          <div id='mensagem' style='font-size: 12px; margin-left: 2px; margin-top: 1px; top: 3px;'>CAUTION</div>
+
+          </div>
+          </div>
+          </div>
+          <!--END STATUS VISOR DIV-->
+          </div>
+
+          <!--START TYPED.JS VISOR DIV-->
+          <style>
+          #fontTypedDiv {
+            font-family: 'Monospace' !important;
+          }
+
+          .buttonSwipClassShadow {
+            box-shadow: 0 0 10px 5px #ff5000;
+            pointer-events: none;
+            animation: pulseSwipShad 3s ease-out infinite;
+          }
+
+          @keyframes pulseSwipShad {
+            0%, 100% { box-shadow: 0 0 10px 2px transparent }
+            50% { box-shadow: 0 0 10px 2px #ff5000 }
+          }
+          </style>
+
+          <div id='fontTypedDiv' style='position: absolute; margin-top: 131px;
+          margin-left: -35px; z-index: -1; width: 118px;
+          line-height: 1.25; font-size: 12px; font-weight: bold;
+          color: #37b348; pointer-events: none;'>",
+            uiOutput(outputId = "outTypedDrop1"),
+            "<!--END TYPED.JS VISOR DIV-->
+          </div>
+
+          <!--START DROP HEARTBEAT DIV-->
+          <div style='text-align: center; position: absolute;
+          margin-top: 147px; margin-left: 15px; z-index: 1; opacity: .45'>
+
+          <div id='gaugemeterline'>
+          <svg width='64px' height='48px'>
+          <polyline points='0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24' id='back'></polyline>
+          <polyline points='0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24' id='front'></polyline>
+          </svg>
+          </div>
+          <!--END DROP HEARTBEAT DIV-->
+          </div>
+
+          <!--START BUTTONS SWIPER SCRIPT-->
+          <script>
+              document.addEventListener('DOMContentLoaded', function() {
+
+                  const buttons = [
+                      document.getElementById('swiperChangeBttn1'),
+                      document.getElementById('swiperChangeBttn2'),
+                      document.getElementById('swiperChangeBttn3'),
+                      document.getElementById('swiperChangeBttn4')
+                  ];
+
+                  buttons.forEach(button => {
+                      button.addEventListener('click', function() {
+                          buttons.forEach(btn1 => btn1.classList.remove('buttonSwipClassShadow'));
+                          this.classList.add('buttonSwipClassShadow');
+                      });
+                  });
+
+                  const buttons2 = [
+                      document.getElementById('swiperChangeEchBttn5'),
+                      document.getElementById('swiperChangeEchBttn6'),
+                      document.getElementById('swiperChangeEchBttn7')
+                  ];
+
+                  buttons2.forEach(button2 => {
+                      button2.addEventListener('click', function() {
+                          buttons2.forEach(btn2 => btn2.classList.remove('buttonSwipClassShadow'));
+                          this.classList.add('buttonSwipClassShadow');
+                      });
+                  });
+
+              });
+          </script>
+          <!--END BUTTONS SWIPER SCRIPT-->
+
+          <!--START BUTTONS SWIPER DIV-->
+          <div style='position: absolute; margin-left: 290px;'>
+
+          <!--sliders btn-->
+          <div id='swiperChangeBttn1' class='buttonSwipClassShadow'
+          onclick='document.getElementById(\"swiperInit\").swiper.slideTo(0);'>
+          <i class='fas fa-sliders' style='font-size: 15px;
+          position: relative; top: -0.1em;'></i>
+          </div>
+
+          <div id='swiperChangeBttn2'
+          onclick='document.getElementById(\"swiperInit\").swiper.slideTo(1);'>
+          <i class='fas fa-chart-line' style='font-size: 15px;
+          position: relative; top: -0.1em;'></i>
+          </div>
+
+          <div id='swiperChangeBttn3'
+          onclick='document.getElementById(\"swiperInit\").swiper.slideTo(2);'>
+          <i class='fas fa-subscript' style='font-size: 15px;
+          position: relative; top: -0.1em;'></i>
+          </div>
+
+          <div id='swiperChangeBttn4'
+          onclick='document.getElementById(\"swiperInit\").swiper.slideTo(3);'>
+          <i class='fas fa-3' style='font-size: 15px;
+          position: relative; top: -0.1em;'></i>
+          </div>
+
+          <!--END BUTTONS SWIPER DIV-->
+          </div>
+
+          <!--START BUTTONS SWIPER ECHARTS-->
+          <div style='position: absolute; margin-left: 289px; margin-top: 180px;'>
+
+          <div id='swiperChangeEchBttn5' onclick='switchToBarOption()'
+          class='notAllowSwipBtn2 buttonSwipClassShadow'>
+          <i class='fas fa-chart-column' style='font-size: 15px;
+          position: relative; top: -0.1em;'></i>
+          </div>
+
+          <div id='swiperChangeEchBttn6' onclick='switchToPieOption()'
+          class='notAllowSwipBtn2'>
+          <i class='fas fa-pie-chart' style='font-size: 15px;
+          position: relative; top: -0.2em; left: -0.1em;'></i>
+          </div>
+
+          <div id='swiperChangeEchBttn7' onclick='switchToGaugeOption()'
+          class='notAllowSwipBtn2'>
+          <i class='fas fa-gauge' style='font-size: 15px;
+          position: relative; top: -0.2em;'></i>
+          </div>
+
+          <!--END BUTTONS SWIPER ECHARTS-->
+          </div>
+
+          <!--START GAUGES DROPDOWN DIV-->
+          <div id='echartsGaugeDrop' style='height: 320px;
+          width: 450px; margin-top: -14px;'>
+          <!--END GAUGES DROPDOWN DIV-->
+          </div>"
+          )),
+
+          # END VISOR/ GAUGES DROPDOWN----
+          HTML(
+            "<!--END DROP SWIPER AND GAUGES DIV (YYYdrop)-->
+          </div>
+          </div>"
+          ),
+
+          # lever drop page 1----
+          HTML(
+            "<style>
+                          #clickoutleverstatDropPage1 {
+                            display: none;
+                          }
+
+                          #clickoutleverstatDropPage1Label {
+                            cursor: pointer;
+                            display: block;
+                            border: 1px solid #999;
+                            border-radius: 11px;
+                            background-color: lightblue;
+                            width: 40px;
+                            height: 20px;
+                            position: relative;
+                            transition: all 0.2s;
+                            rotate: 90deg;
+                          }
+
+                          #clickoutleverstatDropPage1Label:after {
+                            content: '';
+                            background-color: #2c60aa;
+                            border: 2px solid #020202;
+                            border-radius: 10px;
+                            width: 18px;
+                            height: 18px;
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            transition: all 0.2s;
+                          }
+
+                          #clickoutleverstatDropPage1:checked+#clickoutleverstatDropPage1Label {
+                            background-color: #ccaae3;
+                            border-color: #858383;
+                          }
+
+                          #clickoutleverstatDropPage1:checked+#clickoutleverstatDropPage1Label:after {
+                            left: 20px;
+                            border-color: #020202;
+                            background: #734196;
+                          }
+
+                          .notAllowSwipBtn1 {
+                            opacity: .5;
+                            cursor: not-allowed;
+                          }
+
+                          .notAllowSwipBtn1:active {
+                            pointer-events: none;
+                          }
+
+                          .notAllowSwipBtn2 {
+                            opacity: .5;
+                            cursor: not-allowed;
+                          }
+
+                          .notAllowSwipBtn2:active {
+                            pointer-events: none;
+                          }
+                          </style>
+
+                          <script>
+                          document.addEventListener('DOMContentLoaded', function() {
+                            const swiperButtons1 = document.querySelectorAll('[id^=\"swiperChangeBttn\"]');
+                            const swiperButtons2 = document.querySelectorAll('[id^=\"swiperChangeEch\"]');
+                            document.getElementById('clickoutleverstatDropPage1').addEventListener('change', function() {
+                              if (this.checked) {
+                                swiperButtons1.forEach(function(button) {
+                                  button.classList.add('notAllowSwipBtn1');
+                                });
+                                swiperButtons2.forEach(function(button) {
+                                  button.classList.remove('notAllowSwipBtn2');
+                                });
+                              } else {
+                                swiperButtons1.forEach(function(button) {
+                                  button.classList.remove('notAllowSwipBtn1');
+                                });
+                                swiperButtons2.forEach(function(button) {
+                                  button.classList.add('notAllowSwipBtn2');
+                                });
+                              }
+                            });
+                          });
+                          </script>
+
+                          <div style='position: relative; inset: 142px 0 0 351px;'>
+                          <input type='checkbox' id='clickoutleverstatDropPage1'>
+                          <label for='clickoutleverstatDropPage1' id='clickoutleverstatDropPage1Label'></label>
+                          </div>"
+          ),
+
+          # END MAIN DIV DROPDOWN----
+          HTML(
+            "<!--END MAIN DIV (YYYdrop)-->
+                            </div>"
+          )
+
+        ) # END shinyWidgets::dropdown()----
+
+      ), # END DROPDOWN tags$div()----
+
+      # START HEADER/ PAGE----
+      div(
+
+        class = "gridClass",
+
+        # START HEADER----
+        HTML(paste0(
+          "<!--START MISC-->
+
+        <!--START HEADER BUTTONS-->
+        <div class='elementNone'>
+        <input id='slideruphelp1' type='number' onchange='atualizarCampo()'>
+        <input id='slideruphelp2' type='number'>
+        <input id='slideruphelp3' type='number'>
+        <button id='darktheme1'></button>
+        <button id='drkThmSwp1'></button>
+        <button id='glideJsIntro' class='action-button'></button>
+        <!--END HEADER BUTTONS-->
+
+        <!--START TRANSLATORS-->
+        <span id='themeNameSpan'>", i18n$t("Change theme"), "</span>
+        <span id='calculatorNameSpan'>", i18n$t("Calculator"), "</span>
+        <span id='helpNameSpan'>", i18n$t("App info"), "</span>
+        <!--END TRANSLATORS-->
+
+        <!--END MISC-->
+        </div>
+
+        <style>
+        #chartHeader {
+          width: 100%;
+          height: 72px;
+          position: fixed !important;
+          inset: 0 !important;
+          background-color: #49a6de;
+          border-bottom: 3px solid #fee200;
+        }
+        </style>
+
+        <script>
+        /// chart Header
+        document.addEventListener('DOMContentLoaded', function() {
+
+      // Inicializa o gráfico
+      let chartHeaderUse = echarts.init(document.getElementById('chartHeader'));
+
+      // Define opções com elementos gráficos
+
+      window.addEventListener('resize', function() {
+        chartHeaderUse.resize();
+      });
+
+      function updateNavbar1 (themeName, calculatorName, helpName) {
+      let option = {
+
+        tooltip: {show: true},
+
+          graphic: [
+
+          {
+            type: 'image',
+            left: '5%',
+            top: '9%',
+            style: {
+              image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1015px-BMW.svg.png',
+              width: 55,
+              height: 55
+            }
+          },
+
+          {
+            type: 'text',
+            left: '10%',
+            top: '9%',
+            style: {
+              text: 'pricemeter',
+              fontSize: 50,
+              fontFamily: 'Lato',
+              fontWeight: 'bold',
+              lineDash: [0, 200],
+              lineDashOffset: 0,
+              fill: '#fee200',
+              stroke: '#0c283c',
+              lineWidth: 1
+            },
+            keyframeAnimation: {
+              duration: 5000,
+              loop: true,
+              keyframes: [{
+                  percent: 0.7,
+                  style: {
+                    fill: 'transparent',
+                    lineDashOffset: 200,
+                    lineDash: [200, 0]
+                  }
+                },
+                {
+                  percent: 0.8,
+                  style: {
+                    fill: 'transparent'
+                  }
+                },
+                {
+                  percent: 1,
+                  style: {
+                    fill: '#a0bb47'
+                  }
+                }
+              ]
+            }
+          }],
+                  toolbox: [{
+                    tooltip: { // same as option.tooltip
+                      show: true,
+                      formatter: function(params) {
+                        let title = params.title;
+                        return '<div style=\"color: #fafac0;\">' +
+                  title + '</div>'
+          },
+          backgroundColor: '#242832',
+          extraCssText: 'opacity: .75;' // user-defined CSS styles
+        },
+        show: true,
+        showTitle: false,
+        top: '12%',
+        right: '3%',
+        itemSize: 40,
+        itemGap: 20,
+
+        feature: {
+
+          myToolTheme: {
+            title: themeName,
+            icon: 'M294.2 1.2c5.1 2.1 8.7 6.7 9.6 12.1l14.1 84.7 84.7 14.1c5.4 .9 10 4.5 12.1 9.6s1.5 10.9-1.6 15.4l-38.5 55c-2.2-.1-4.4-.2-6.7-.2c-23.3 0-45.1 6.2-64 17.1l0-1.1c0-53-43-96-96-96s-96 43-96 96s43 96 96 96c8.1 0 15.9-1 23.4-2.9c-36.6 18.1-63.3 53.1-69.8 94.9l-24.4 17c-4.5 3.1-10.3 3.8-15.4 1.6s-8.7-6.7-9.6-12.1L98.1 317.9 13.4 303.8c-5.4-.9-10-4.5-12.1-9.6s-1.5-10.9 1.6-15.4L52.5 208 2.9 137.2c-3.2-4.5-3.8-10.3-1.6-15.4s6.7-8.7 12.1-9.6L98.1 98.1l14.1-84.7c.9-5.4 4.5-10 9.6-12.1s10.9-1.5 15.4 1.6L208 52.5 278.8 2.9c4.5-3.2 10.3-3.8 15.4-1.6zM144 208a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM639.9 431.9c0 44.2-35.8 80-80 80H288c-53 0-96-43-96-96c0-47.6 34.6-87 80-94.6l0-1.3c0-53 43-96 96-96c34.9 0 65.4 18.6 82.2 46.4c13-9.1 28.8-14.4 45.8-14.4c44.2 0 80 35.8 80 80c0 5.9-.6 11.7-1.9 17.2c37.4 6.7 65.8 39.4 65.8 78.7z',
+            iconStyle: {
+              color: '#ff8',
+              borderWidth: 1,
+              borderColor: '#242832',
+              shadowBlur: 10,
+              shadowColor: '#fafac0',
+            },
+             onclick: function(params) {
+               let currentColor = chartHeaderUse.getModel().option.toolbox[0].feature.myToolTheme.iconStyle.color;
+               if (currentColor === '#ff8') {
+                 chartHeaderUse.getModel().option.toolbox[0].feature.myToolTheme.iconStyle.color = '#3d475e';
+                 chartHeaderUse.getModel().option.toolbox[0].feature.myToolTheme.iconStyle.shadowColor = '#1f52b8';
+               } else {
+                 chartHeaderUse.getModel().option.toolbox[0].feature.myToolTheme.iconStyle.color = '#ff8';
+                 chartHeaderUse.getModel().option.toolbox[0].feature.myToolTheme.iconStyle.shadowColor = '#fafac0';
+              }
+              chartHeaderUse.setOption(chartHeaderUse.getModel().option);
+              $('#darktheme1').click();
+            }
+          },
+            myToolCalculator: {
+            title: calculatorName,
+            icon: 'M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 64H288c17.7 0 32 14.3 32 32v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32zm32 160a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM96 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM64 416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM192 256a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zm64-64a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM288 448a32 32 0 1 1 0-64 32 32 0 1 1 0 64z',
+            iconStyle: {
+              color: 'indianred',
+              borderWidth: 1,
+              borderColor: '#242832'
+            },
+            onclick: function() {
+              $('#showCalculatorButton').trigger('click');
+            }
+          },
+          myToolHelp: {
+            title: helpName,
+            icon: 'M160 64c0-35.3 28.7-64 64-64H576c35.3 0 64 28.7 64 64V352c0 35.3-28.7 64-64 64H336.8c-11.8-25.5-29.9-47.5-52.4-64H384V320c0-17.7 14.3-32 32-32h64c17.7 0 32 14.3 32 32v32h64V64L224 64v49.1C205.2 102.2 183.3 96 160 96V64zm0 64a96 96 0 1 1 0 192 96 96 0 1 1 0-192zM133.3 352h53.3C260.3 352 320 411.7 320 485.3c0 14.7-11.9 26.7-26.7 26.7H26.7C11.9 512 0 500.1 0 485.3C0 411.7 59.7 352 133.3 352z',
+            iconStyle: {
+              color: '#d074f7',
+              borderWidth: 1,
+              borderColor: '#242832'
+            },
+            onclick: function() {
+              $('#glideJsIntro').trigger('click');
+            }
+          }
+        }
+        }]
+
+        };
+        chartHeaderUse.setOption(option);
+      };
+
+      function updateNavbar2() {
+        let themeName = $('#themeNameSpan').text();
+        let calculatorName = $('#calculatorNameSpan').text();
+        let helpName = $('#helpNameSpan').text();
+        updateNavbar1(themeName, calculatorName, helpName);
+      };
+
+      $('#fakeButtonInitPage').on('click', function() {
+        updateNavbar2();
+      });
+
+      updateNavbar2();
+
+        });
+        </script>
+
+        <!--START HEADER DIV-->
+        <div style='grid-column: span 12; z-index: 1;'>
+        <div id='chartHeader' style='width: 100%;'></div>
+        <!--END HEADER DIV-->
+        </div>"
+        )),
+        # END APP HEADER----
+
+        # START APP PAGE----
+        div(
+
+          class = "hiddenInitPage",
+          style = "grid-column: span 12;",
+
+          tags$head(tags$style(".hiddenInitPage {display: none;}")),
+
+          div(
+
+            class = "gridClass",
+
+            # multiAction button DT----
+            div(
+
+              style = "grid-column: span 7; z-index: 0; margin-top: 8px;",
+
+              HTML(paste0(
+                "<div style='display: none;'>
+
+            <span id='titleSwalRemoveDT1'>",
+                i18n$t("Remove selected rows"),
+                "</span>
+
+            <span id='textSwalRemoveDT1'>",
+                i18n$t("Remove the selected rows by clicking the Remove button below.
+            This action is irreversible. If you need to reuse the removed
+            data, you will need to re-enter it."),
+                "</span>
+
+            <span id='buttonSwalRemoveDT2'>",
+                i18n$t("Back"),
+                "</span>
+
+            <span id='buttonSwalRemoveDT1'>",
+                i18n$t("Remove"),
+                "</span>
+
+            <!--DT remove awn notification-->
+            <span id='removeTitleSwalSpan'>", i18n$t('Removed!'), "</span>
+            <span id='removeContentSwalSpan'>", i18n$t('Line(s) removed successfully.'), "</span>
+
+            </div>
+
+            <style>
+            [class*=mif-] {
+              position: relative;
+              top: 2px;
+            }
+
+            .mif-plus:before {
+              position: relative;
+              top: -3px !important;
+            }
+
+            [id^='removeDT'] {
+              font-size: 20px;
+              color: #fafac0;
+              border: 2px solid #555555;
+              border-radius: 4px;
+              outline: none;
+              padding: 3px;
+            }
+
+            #removeDT1:active {
+              background-color: #d54545 !important;
+            }
+
+            #removeDT2:active {
+              background-color: #40bcac !important;
+            }
+            </style>
+
+            <script>
+
+            $(document).on('click', '#removeDT1', function() {
+              Shiny.setInputValue('removeDT1', Math.random(), {priority: 'event'});
+            });
+
+            $(document).ready(function() {
+
+            // refresh to work in sweetalert2 (translate i18n$t)
+            function updateSwalFireRemove() {
+
+              let titleSwalRemoveDTUse1 = $('#titleSwalRemoveDT1').html();
+              let textSwalRemoveDTUse1 = $('#textSwalRemoveDT1').html();
+              let buttonSwalRemoveDTUse1 = $('#buttonSwalRemoveDT1').text();
+              let buttonSwalRemoveDTUse2 = $('#buttonSwalRemoveDT2').text();
+
+              $('#preRemoveDT1').on('click', function() {
+                Swal.fire({
+                  icon: 'info',
+                  html: `<!--HTML text-->
+                  <div style='margin-bottom: 15px;'>
+                  <span style='font-size: 27px; color: #242832;'>`+titleSwalRemoveDTUse1+`</span>
+                  </div>
+                  <div style='font-size: 18px; color: #242832;'>`+textSwalRemoveDTUse1+`</div>
+                  <div style='margin-top: 20px;'>
+                  <button id='removeDT2' onclick='swal.close(); return false;'
+                  style='background-color: #49a6de;'>
+                  <i class='fas fa-person-walking-arrow-loop-left'></i> `+buttonSwalRemoveDTUse2+`
+                  </button>
+                  <button id='removeDT1' onclick='swal.close(); return false;'
+                  style='background-color: #f00;'>
+                  <i class='fas fa-trash-can'></i> `+buttonSwalRemoveDTUse1+`</button>
+                  </div>`,
+                  allowOutsideClick: false,
+                  showConfirmButton: false,
+                  background: '#f2c372',
+                  customClass: {
+                    title: 'swalDropTitle1'
+                  },
+                  width: 475,
+                  iconColor: '#ff7500',
+                  showClass: {
+                  popup: 'animated bounceInDown faster'
+                  },
+                  hideClass: {
+                  popup: 'animated bounceOutUp faster'
+                  },
+
+                  didOpen: function() {
+                    $('#removeDT1').on('click', function() {
+                      $('.multi-action .mui-action-button.active ~ .actions.drop-right li:nth-child(1),\\
+                      .multi-action .mui-action-button.active ~ .actions.drop-right li:nth-child(2)').attr('style', 'pointer-events: none; opacity: .5 !important;');
+                    });
+                  },
+
+                  willClose: function() {
+
+                   let notifierSwalRemoveDT = new AWN();
+
+                   let title = document.getElementById('removeTitleSwalSpan').innerText;
+                   let content = document.getElementById('removeContentSwalSpan').innerText;
+
+                   $('#removeDT1').on('click', function() {
+                    setTimeout(function() {
+                      notifierSwalRemoveDT.alert(
+                        '<div><span>'+content+'</span></div>',
+                        { labels: { alert: title },
+                          icons: { alert: 'fas fa-trash-can' }
+                        }
+                      );
+                    }, 500);
+                  });
+
+                  }
+
+                });
+              })
+
+            }
+
+              $('#fakeButtonInitPage').on('click', function() {
+                updateSwalFireRemove();
+              })
+
+            })
+            </script>"
+              )),
+
+              multiActionButton::multiActionButton(
+                rotate = TRUE, bg = "brandColor2", fg = "yellow",
+                icon = "plus", direction = "right",
+                subButtons = list(
+                  multiActionButton::subButton("startgaugeeffectbtnanimation1", bg = "green", icon = "meter"),
+                  multiActionButton::subButton("preRemoveDT1", bg = "red", icon = "cross"),
+                  multiActionButton::subButton("clusterSelect", bg = "emerald", icon = "equalizer-v"),
+                  multiActionButton::subButton("clusterAnalyze", bg = "darkEmerald", icon = "chart-line"),
+                  multiActionButton::subButton("saveDataTable", bg = "blue", icon = "floppy-disk"),
+                  multiActionButton::subButton("loadDataTable", bg = "orange", icon = "server"),
+                  multiActionButton::subButton("bookBtn", bg = "mauve", icon = "books"),
+                  multiActionButton::subButton("add_data", bg = "lightRed", icon = "cpu")
+                )
+              )
+
+            ),
+
+            # tube visor----
+            HTML(
+              "<div style='display: none;'>
+        <span id='contentScoreSpan1'>Change (false)</span>
+        <span id='contentScoreSpan2'>Change (true)</span>
+        <span id='contentScoreSpan3'>Contrib. (false)</span>
+        <span id='contentScoreSpan4'>Contrib. (true)</span>
+        </div>
+
+        <div style='grid-column: span 5;'>
+        <div id='tubeSign' style='margin-top: 0;'></div>
+        </div>
+
+        <script>
+        $(document).ready(function() {
+          function updateTubeScore(contentScoreUse1, contentScoreUse2,
+          contentScoreUse3, contentScoreUse4, value1, value2) {
+            $('#tubeSign').tubeSign();
+            $('#tubeSign').tubeSign('addRotaList', [
+              { left: contentScoreUse1, right: '100%' },
+              { left: contentScoreUse2, right: value1.toFixed(1)+'%' },
+              { left: contentScoreUse3, right: value2.toFixed(1)+'%' },
+              { left: contentScoreUse4, right: value2.toFixed(1)+'%' }
+            ], 4000, 'clearBeforeEachUpdate');
+          };
+          function updateTubeScore2() {
+            let contentScoreUse1 = $('#contentScoreSpan1').text();
+            let contentScoreUse2 = $('#contentScoreSpan2').text();
+            let contentScoreUse3 = $('#contentScoreSpan3').text();
+            let contentScoreUse4 = $('#contentScoreSpan4').text();
+            let value1 = Number($('#slideruphelp1').val());
+            let value2 = Number($('#slideruphelp2').val());
+            updateTubeScore(contentScoreUse1, contentScoreUse2,
+            contentScoreUse3, contentScoreUse4, value1, value2);
+          };
+          $('#startgaugeeffectbtnanimation1').on('click', function() {
+            $('.signinfo').empty();
+            updateTubeScore2();
+          });
+          updateTubeScore2();
+        });
+        </script>"
+            ),
+
+            # datatable header----
+            HTML(paste0(
+              "<div style='grid-column: span 7; font-size: 25px;'>",
+              i18n$t("DATA (click to analyze or remove)"),
+              "</div>
+
+                            <!--empty div-->
+                            <div style='grid-column: span 5;'></div>"
+            )),
+
+            # datatable----
+            div(
+
+              style = "grid-column: span 7;",
+
+              HTML(
+                "<style>
+            table.dataTable thead>tr>th.sorting {
+              font-family: 'D-DIN' !important;
+              background: #ff8 !important;
+              color: #242832 !important;
+              text-align: center;
+            }
+            table.dataTable.display tbody tr td {
+              text-align: center;
+              border-top: 1px solid #ff8 !important;
+            }
+            table.dataTable.no-footer {
+              border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+              border: 2px solid #ff8;
+              border-radius: 6px;
+            }
+            </style>"
+              ),
+
+              DT::DTOutput(outputId = "priceDT")
+
+            ),
+
+            # START GAUGE DT right side----
+            HTML(
+              "<div id='gaugeDT1'
+        style='grid-column: span 5; height: 475px;
+        width: 100%; display: block; margin: auto;
+        margin-top: -36px;'>
+        </div>"
+            ),
+            # END GAUGE DT right side----
+
+            HTML(paste0(
+              "<div style='grid-column: span 12;'>", uiOutput(outputId = "textDT"), "</div>
+              <input id='inputTest' type='number' oninput='maxValueSliderToolEch()'>"
+            ))
+
+          )
+
+        ) # END APP PAGE----
+
+      ) # END HEADER/ PAGE----
+
+    ) # END FLUIDPAGE----
+
+  ) # END TAGLIST----
+
+}

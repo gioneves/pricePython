@@ -1,0 +1,168 @@
+<div class='gridClass'>
+  <div class='elementNone'>
+     <button id='complexTranslation'></button>
+    <button id='darkTheme'></button>
+    <span id='themeNameSpan' data-i18n='tChangeTheme'>Change theme</span>
+  </div>
+  <div class='gridTwelve'>
+    <div class='gridClass'>
+      <div id='chartHeader' style='width: 100%;'></div>
+    </div>
+  </div>
+</div>
+
+<style>
+#chartHeader {
+  width: 100%;
+  height: 72px;
+  position: fixed !important;
+  inset: 0;
+  background-color: #49a6de;
+  border-bottom: 3px solid #fee200;
+}
+</style>
+
+<script>
+ document.addEventListener('DOMContentLoaded', function() {
+
+   let chartHeaderUse = echarts.init(document.getElementById('chartHeader'));
+
+   window.addEventListener('resize', function() {
+     chartHeaderUse.resize();
+   });
+
+   function updateNavbar1(themeName, calculatorName, helpName) {
+     let option = {
+
+       tooltip: [{
+         show: true
+       }],
+
+       title: [{
+         text: "{a|price}{b|meter}",
+         left: '10%',
+         top: '2%',
+         textStyle: {
+           rich: {
+             a: {
+               color: "transparent",
+               textBorderWidth: 1,
+               textBorderColor: "#242832",
+               fontSize: 50,
+               fontWeight: "bold",
+               fontFamily: "Lato"
+             },
+             b: {
+               color: "#fee200",
+               textBorderWidth: 1,
+               fontSize: 50,
+               fontWeight: "bold",
+               fontFamily: "Lato"
+             }
+           }
+         }
+       }],
+
+       graphic: [
+
+         {
+           type: 'image',
+           left: '5%',
+           top: '9%',
+           style: {
+             image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/1015px-BMW.svg.png',
+             width: 55,
+             height: 55
+           }
+         }
+
+       ],
+       toolbox: [{
+         tooltip: { // same as option.tooltip
+           show: true,
+           formatter: function(params) {
+             let title = params.title;
+             return '<div style="color: #fafac0;">' +
+               title + '</div>'
+           },
+           backgroundColor: '#242832',
+           extraCssText: 'opacity: .75;' // user-defined CSS styles
+         },
+         show: true,
+         showTitle: false,
+         top: '12%',
+         right: '3%',
+         itemSize: 40,
+         itemGap: 20,
+
+         feature: {
+
+           myToolTheme: {
+             title: themeName,
+             icon: 'M294.2 1.2c5.1 2.1 8.7 6.7 9.6 12.1l14.1 84.7 84.7 14.1c5.4 .9 10 4.5 12.1 9.6s1.5 10.9-1.6 15.4l-38.5 55c-2.2-.1-4.4-.2-6.7-.2c-23.3 0-45.1 6.2-64 17.1l0-1.1c0-53-43-96-96-96s-96 43-96 96s43 96 96 96c8.1 0 15.9-1 23.4-2.9c-36.6 18.1-63.3 53.1-69.8 94.9l-24.4 17c-4.5 3.1-10.3 3.8-15.4 1.6s-8.7-6.7-9.6-12.1L98.1 317.9 13.4 303.8c-5.4-.9-10-4.5-12.1-9.6s-1.5-10.9 1.6-15.4L52.5 208 2.9 137.2c-3.2-4.5-3.8-10.3-1.6-15.4s6.7-8.7 12.1-9.6L98.1 98.1l14.1-84.7c.9-5.4 4.5-10 9.6-12.1s10.9-1.5 15.4 1.6L208 52.5 278.8 2.9c4.5-3.2 10.3-3.8 15.4-1.6zM144 208a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM639.9 431.9c0 44.2-35.8 80-80 80H288c-53 0-96-43-96-96c0-47.6 34.6-87 80-94.6l0-1.3c0-53 43-96 96-96c34.9 0 65.4 18.6 82.2 46.4c13-9.1 28.8-14.4 45.8-14.4c44.2 0 80 35.8 80 80c0 5.9-.6 11.7-1.9 17.2c37.4 6.7 65.8 39.4 65.8 78.7z',
+             iconStyle: {
+               color: '#ff8',
+               borderWidth: 1,
+               borderColor: '#242832',
+               shadowBlur: 10,
+               shadowColor: '#fafac0',
+             },
+             onclick: function(params) {
+               let currentColor = chartHeaderUse.getModel().option.toolbox[0].feature.myToolTheme.iconStyle.color;
+               if (currentColor === '#ff8') {
+                 chartHeaderUse.getModel().option.toolbox[0].feature.myToolTheme.iconStyle.color = '#3d475e';
+                 chartHeaderUse.getModel().option.toolbox[0].feature.myToolTheme.iconStyle.shadowColor = '#1f52b8';
+               } else {
+                 chartHeaderUse.getModel().option.toolbox[0].feature.myToolTheme.iconStyle.color = '#ff8';
+                 chartHeaderUse.getModel().option.toolbox[0].feature.myToolTheme.iconStyle.shadowColor = '#fafac0';
+               }
+               chartHeaderUse.setOption(chartHeaderUse.getModel().option);
+               $('#darkTheme').click();
+             }
+           },
+           myToolCalculator: {
+             title: calculatorName,
+             icon: 'M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H64zM96 64H288c17.7 0 32 14.3 32 32v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32zm32 160a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM96 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM64 416c0-17.7 14.3-32 32-32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM192 256a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zm64-64a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM288 448a32 32 0 1 1 0-64 32 32 0 1 1 0 64z',
+             iconStyle: {
+               color: 'indianred',
+               borderWidth: 1,
+               borderColor: '#242832'
+             },
+             onclick: function() {
+               $('#showCalculatorButton').trigger('click');
+             }
+           },
+           myToolHelp: {
+             title: helpName,
+             icon: 'M160 64c0-35.3 28.7-64 64-64H576c35.3 0 64 28.7 64 64V352c0 35.3-28.7 64-64 64H336.8c-11.8-25.5-29.9-47.5-52.4-64H384V320c0-17.7 14.3-32 32-32h64c17.7 0 32 14.3 32 32v32h64V64L224 64v49.1C205.2 102.2 183.3 96 160 96V64zm0 64a96 96 0 1 1 0 192 96 96 0 1 1 0-192zM133.3 352h53.3C260.3 352 320 411.7 320 485.3c0 14.7-11.9 26.7-26.7 26.7H26.7C11.9 512 0 500.1 0 485.3C0 411.7 59.7 352 133.3 352z',
+             iconStyle: {
+               color: '#d074f7',
+               borderWidth: 1,
+               borderColor: '#242832'
+             },
+             onclick: function() {
+               $('#glideJsIntro').trigger('click');
+             }
+           }
+         }
+       }]
+
+     };
+     chartHeaderUse.setOption(option);
+   };
+
+   function updateNavbar2() {
+     let themeName = $('#themeNameSpan').text();
+     let calculatorName = $('#calculatorNameSpan').text();
+     let helpName = $('#helpNameSpan').text();
+     updateNavbar1(themeName, calculatorName, helpName);
+   };
+
+   $("#complexTranslation").on("click", function() {
+     updateNavbar2();
+   });
+
+   updateNavbar2();
+
+ });
+</script>

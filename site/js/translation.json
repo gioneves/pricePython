@@ -1,0 +1,18 @@
+{
+  "en": {
+    "translation": {
+      "tChangeTheme": "Change theme"
+    }
+  },
+  "fr": {
+    "translation": {
+      "tChangeTheme": "Bonjour le monde"
+    }
+  },
+  "es": {
+    "translation": {
+      "tChangeTheme": "Hola Mundo"
+    }
+  }
+}
+

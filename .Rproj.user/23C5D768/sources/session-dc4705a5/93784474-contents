@@ -1,0 +1,91 @@
+<div class='gridClass'>
+  <div class='gridTwelve'>
+    <div class='gridClass'>
+      <button id='dropBttn' class='bttn-unite bttn-royal' data-clique='true'>
+        <i class='fas fa-gear' style='font-size: 31px; margin-left: -0.12em;
+        margin-top: 0.1em;'></i></button>
+      <div id='dropdownStart' class='dropdownHidden'>
+        <div style='z-index: 2; position: relative; text-align: center;
+        color: #fafac0; top: 0.7em;'>Assign data</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <button onclick="changeLanguageAndInit('en');">English</button>
+  <button onclick="changeLanguageAndInit('fr');">French</button>
+  <button onclick="changeLanguageAndInit('es');">Spanish</button>
+  <br>
+  <span data-i18n='tChangeTheme'>Change theme</span>
+</div>
+
+<style>
+#dropdownStart {
+  position: absolute;
+  background-color: #fafac0;
+  color: #242832;
+  border: 2px solid #008cba;
+  box-shadow: 0 0 10px 2px #afe0da;
+  margin-top: 55px;
+  width: 750px;
+  height: 415px;
+  border-radius: 5px;
+  padding: 5px;
+  z-index: 2;
+}
+
+#dropdownStart:after {
+  content: "";
+  position: relative;
+  top: -20px;
+  width: 98%;
+  height: 40px;
+  display: block;
+  background-color: #49a6de;
+  border: 1px solid #858383;
+  border-radius: 3px;
+  margin: auto;
+  z-index: 1;
+}
+
+@-webkit-keyframes fa-spin{
+  0%{-webkit-transform:rotate(0deg);
+  transform:rotate(0deg)}100%{-webkit-transform:rotate(359deg);
+  transform:rotate(359deg)}
+}
+
+@keyframes fa-spin{
+  0%{-webkit-transform:rotate(0deg);
+  transform:rotate(0deg)}100%{-webkit-transform:rotate(359deg);
+  transform:rotate(359deg)}
+}
+</style>
+
+<script>
+$(document).ready(function() {
+  $('#dropBttn').on('click', function() {
+    const clique = $(this).data('clique');
+    if (clique) {
+      // open menu
+      $("#dropdownStart")
+        .addClass('animate__animated animate__bounceInLeft')
+        .show()
+        .animate({
+          opacity: '1'
+        }, 1000);
+    } else {
+      // close menu
+      $("#dropdownStart")
+        .addClass('animate__animated animate__bounceOutLeft')
+        .animate({
+          opacity: '0'
+        }, 1000, function() {
+          $(this).hide();
+          $(this).removeClass('animate__animated animate__bounceOutLeft');
+        });
+    }
+    $(this).data('clique', !clique);
+  });
+});
+</script>

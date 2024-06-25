@@ -1,0 +1,14 @@
+# Dependencies
+from shiny import App, render, ui
+
+# UI
+app_ui = ui.page_fluid(
+  ui.HTML("<h1>This is a Python3 ShinyApp.</h1>"),
+  ui.input_slider("n", "N", 0, 100, 100)
+)
+
+# Server
+def server(input, output, session):
+    pass
+
+app = App(app_ui, server)

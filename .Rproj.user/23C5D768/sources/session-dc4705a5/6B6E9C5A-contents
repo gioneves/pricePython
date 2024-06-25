@@ -1,0 +1,60 @@
+/*page config*/
+body {
+  overflow-x: hidden;
+  background-color: #fafac0;
+}
+
+.container-fluid {
+  height: 100vh !important;
+  padding: 85px 5% 5% 5.27%;
+}
+
+p, span, strong, h1, h2, h3, h4, h5, h6, button, div {
+  font-family: 'Lato' !important;
+}
+
+/*grids*/
+.gridClass {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.gridTwelve {
+  grid-column: span 12;
+}
+
+.elementNone {
+  display: none;
+}
+
+/*dropdown menu*/
+.dropdownHidden {
+  display: none;
+  opacity: 0;
+}
+
+.bttn-unite.bttn-royal {
+  background: #008cba !important;
+  color: #fff !important;
+  outline: none;
+  border: 1px solid #020202 !important;
+  width: 50px;
+  height: 50px;
+}
+
+.bttn-unite.bttn-royal:focus {
+  outline: none;
+}
+
+.bttn-unite:after {
+  background: lightblue !important;
+}
+
+.bttn-unite:before {
+  background: #49a6de !important;
+}
+
+/*rotate gear*/
+.fas.fa-gear, .fas.fa-arrows-rotate {
+  animation: fa-spin 2s infinite linear;
+}

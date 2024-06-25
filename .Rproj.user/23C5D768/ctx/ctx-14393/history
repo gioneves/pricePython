@@ -1,0 +1,512 @@
+ui.include_js(js_file),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++"body { background-color: #fafac0; }\
+.changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+app = App(app_ui, server)
+app.run()
+app_ui = ui.page_fluid(
+# include files in app
+ui.include_css(css_file),
+ui.include_js(js_file),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++"body { background-color: #fafac0; }\
+.changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+app = App(app_ui, server)
+app.run()
+app = App(app_ui, server)
+app.run()
+app_ui = ui.page_fluid(
+# include files in app
+ui.include_css(css_file),
+ui.include_js(js_file),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++"body { background-color: #fafac0; }\
+.changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+def server(input, output, session):
+@output
+@render.ui
+def txt():
+return ui.HTML(f'<span>The value of n*2 is <b style="color: #008cba;">{input.slider1() * 2}</b>.</span>')
+app = App(app_ui, server)
+app.run()
+app_ui = ui.page_fluid(
+# include files in app
+ui.include_css(css_file),
+ui.include_js(js_file),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++"body { background-color: #fafac0; }\
+.changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
++"<div>TEST</div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+def server(input, output, session):
+@output
+@render.ui
+def txt():
+return ui.HTML(f'<span>The value of n*2 is <b style="color: #008cba;">{input.slider1() * 2}</b>.</span>')
+app = App(app_ui, server)
+app.run()
+css_file = Path("site/css/app.css")
+js_file = Path("site/js/app.js")
+# packages
+jqui_js = Path("site/jspack/jqui.js")
+jqui_css = Path("site/jspack/jqui.css")
+animate = Path("site/jspack/animate.css")
+js_echarts = Path("site/jspack/echarts.js")
+app_ui = ui.page_fluid(
+# include files in app
+ui.include_css(css_file),
+ui.include_js(js_file),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++"body { background-color: #fafac0; }\
+.changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
++"<div>TEST</div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+app = App(app_ui, server)
+app.run()
+css_file = Path("site/css/app.css")
+js_file = Path("site/js/app.js")
+# packages
+jqui_js = Path("site/jspack/jqui.js")
+jqui_css = Path("site/jspack/jqui.css")
+animate = Path("site/jspack/animate.css")
+js_echarts = Path("site/jspack/echarts.js")
+app = App(app_ui, server)
+app.run()
+from shiny import ui, render, App
+from shinylive import *
+from pathlib import Path
+# css and js
+css_file = Path("site/css/app.css")
+js_file = Path("site/js/app.js")
+from shiny import ui, render, App
+from shinylive import *
+from pathlib import Path
+# css and js
+css_file = Path("site/css/app.css")
+js_file = Path("site/js/app.js")
+# packages
+jqui_js = Path("site/jspack/jqui.js")
+jqui_css = Path("site/jspack/jqui.css")
+animate = Path("site/jspack/animate.css")
+js_echarts = Path("site/jspack/echarts.js")
+app_ui = ui.page_fluid(
+# include files in app
+ui.include_css(css_file),
+ui.include_js(js_file),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++"body { background-color: #fafac0; }\
+.changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
++"<div>TEST</div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+def server(input, output, session):
+@output
+@render.ui
+def txt():
+return ui.HTML(f'<span>The value of n*2 is <b style="color: #008cba;">{input.slider1() * 2}</b>.</span>')
+app = App(app_ui, server)
+app.run()
+from shiny import ui, render, App
+from shinylive import *
+from pathlib import Path
+# css and js
+css_file = Path("site/css/app.css")
+js_file = Path("site/js/app.js")
+# packages
+jqui_js = Path("site/jspack/jqui.js")
+jqui_css = Path("site/jspack/jqui.css")
+animate = Path("site/jspack/animate.css")
+js_echarts = Path("site/jspack/echarts.js")
+app_ui = ui.page_fluid(
+# include files in app
+ui.include_css(css_file),
+ui.include_js(js_file),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++"body { background-color: #fafac0; }\
+.changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
++"<div>TEST</div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+app = App(app_ui, server)
+app.run()
+from shiny import ui, render, App
+from shinylive import *
+from pathlib import Path
+# css and js
+css_file = Path("site/css/app.css")
+js_file = Path("site/js/app.js")
+# packages
+jqui_js = Path("site/jspack/jqui.js")
+jqui_css = Path("site/jspack/jqui.css")
+animate = Path("site/jspack/animate.css")
+js_echarts = Path("site/jspack/echarts.js")
+app_ui = ui.page_fluid(
+# include files in app
+ui.include_css(css_file),
+ui.include_js(js_file),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++"body { background-color: #fafac0; }\
+.changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
++"<div>TEST</div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+def server(input, output, session):
+@output
+@render.ui
+def txt():
+return ui.HTML(f'<span>The value of n*2 is <b style="color: #008cba;">{input.slider1() * 2}</b>.</span>')
+app = App(app_ui, server)
+app.run()
+app_ui = ui.page_fluid(
+# include files in app
+ui.include_css(css_file),
+ui.include_js(js_file),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++".changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
++"<div>TEST</div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+app = App(app_ui, server)
+app.run()
+# css and js
+css_file = Path("site/css/app.css")
+js_file = Path("site/js/app.js")
+# packages
+jqui_js = Path("site/jspack/jqui.js")
+jqui_css = Path("site/jspack/jqui.css")
+animate = Path("site/jspack/animate.css")
+js_echarts = Path("site/jspack/echarts.js")
+app_ui = ui.page_fluid(
+# include files in app
+ui.include_css(css_file),
+ui.include_js(js_file),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++".changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
++"<div>TEST</div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+app = App(app_ui, server)
+app.run()
+from shiny import ui, render, App
+from shinylive import *
+from pathlib import Path
+# css and js
+css_file = Path("site/css/app.css")
+js_file = Path("site/js/app.js")
+# packages
+jq_js = Path("site/jspack/jq.js")
+jqui_js = Path("site/jspack/jqui.js")
+jqui_css = Path("site/jspack/jqui.css")
+animate = Path("site/jspack/animate.css")
+js_echarts = Path("site/jspack/echarts.js")
+app_ui = ui.page_fluid(
+# include files in app
+ui.include_css(css_file),
+ui.include_js(js_file),
+ui.include_js(jq_js),
+ui.include_js(jqui_js),
+ui.include_css(jqui_css),
+ui.include_css(animate),
+ui.include_js(js_echarts),
+# start app
+ui.HTML(
+"<style>"
++".changeSelector { background-color: #333; color: #fafac0; }\
+.gridClass { display: grid; grid-template-columns: repeat(12, 1fr); }\
+#inputStyle .irs--shiny .irs-bar { background-color: #f00; }"
++"</style>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>"
++"<div class='gridClass'>"
++"<div style='grid-column: span 12;'>Shiny for Python</div>"
++"</div>"
++"</div>"
++"</div>"
++"<button id='darktheme1'>Click</button>"
++"<input id='slider1' oninput='Shiny.setInputValue(`slider1`, Number(document.getElementById(`slider1`).value),\
+{priority: `event`})' type='range' value='50' min='0' max='100' style='accent-color: #ff7500;'>"
++"<div id='echartsDiv' style='width: 450px; height: 400px;'></div>"
++"<div>TEST</div>"
+),
+ui.div(
+ui.input_slider("n", "N", 0, 100, 40),
+id="inputStyle",
+style="color: yellow"
+),
+ui.output_ui("txt")
+)
+def server(input, output, session):
+@output
+@render.ui
+def txt():
+return ui.HTML(f'<span>The value of n*2 is <b style="color: #008cba;">{input.slider1() * 2}</b>.</span>')
+app = App(app_ui, server)
+app.run()
