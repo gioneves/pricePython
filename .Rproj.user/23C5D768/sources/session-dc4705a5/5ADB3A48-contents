@@ -2115,8 +2115,8 @@ app_ui <- function(request) {
             content: \"\";
             position: absolute;
             top: 0;
-            left: 0;
-            width: 100%;
+            left: 0; /* Ajuste o valor para o espaço entre o retângulo e a borda */
+            width: 100%; /* Largura do retângulo */
             height: 40px;
             background-color: #49a6de;
             border-radius: 8px;

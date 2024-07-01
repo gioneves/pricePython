@@ -1,34 +1,109 @@
+<div class='elementNone'>
+  <div class='gridClass'>
+    <div class='gridTwelve'>
+      <div class='gridClass'>
+         <div id='dropIntroContentSpan' style='grid-column: span 12; display: block; margin: auto; text-align: center;' data-i18n='tIntroGuide'>Analysis guide</div>
+         <hr style='border-bottom: 1px solid #020202;' style='grid-column: span 12;'>
+         </div>
+    </div>
+  </div>
+</div>
+
 <div class='gridClass'>
   <div class='gridTwelve'>
     <div class='gridClass'>
-      <button id='dropBttn' class='bttn-unite bttn-royal' data-clique='true'>
-        <i class='fas fa-gear' style='font-size: 31px; margin-left: -0.12em;
-        margin-top: 0.1em;'></i></button>
-      <div id='dropdownStart' class='dropdownHidden'>
-        <div style='z-index: 2; position: relative; text-align: center;
-        color: #fafac0; top: 0.7em;'>Sub-Teste1</div>
+      <div id='dropBtnDiv' style='grid-column: span 12;'>
+        <button id='dropBttn' class='bttn-unite bttn-royal' data-clique='true'>
+          <i class='fas fa-sliders' style='font-size: 27px; margin-left: -.06em;
+          margin-top: 0.2em;'></i></button>
       </div>
     </div>
   </div>
 </div>
 
 <div>
-  <button onclick="changeLanguageAndInit('en');">English</button>
-  <button onclick="changeLanguageAndInit('fr');">French</button>
-  <button onclick="changeLanguageAndInit('es');">Spanish</button>
-  <br>
-  <span data-i18n='tChangeTheme'>Change theme</span>
+  <div id='dropdownStart' class='dropdownHidden'>
+    <div class='gridClass'>
+      <div class='gridTwelve'>
+        <div class='gridClass'>
+          <div style='grid-column: span 12;'>
+            <div style='z-index: 2; position: relative; text-align: center;
+          color: #fafac0; top: 0.7em;'>Assign data <i id='introDropStart' class='fas fa-question'
+          style='background-color: #ffa500; width: 23px; height: 23px; border-radius: 100%;
+          border: 2px solid #858383; padding: 1px 0 0 1px; color: #242832; cursor: pointer;'></i></div>
+          </div>
+          <div class='labelDropStart' style='grid-column: span 12;'>
+            <div class='gridClass' style='grid-column-gap: 10px;'>
+              <div style='grid-column: span 4;'>
+                <i class='fas fa-hand-holding-dollar iColor'></i>
+                <span data-i18n='tHowEarn'>HOW MUCH DO YOU EARN?</span>
+              </div>
+              <div style='grid-column: span 4;'>
+                <i class='fas fa-money-bill-transfer iColor'></i>
+                <span data-i18n='tHowMuch'>HOW MUCH DO YOU SELL FOR?</span>
+              </div>
+              <div style='grid-column: span 4;'>
+                <i class='fas fa-dolly iColor'></i>
+                <span data-i18n='tHowQuant'>(AVERAGE) QUANTITY SOLD</span>
+              </div>
+            </div>
+          </div>
+          <div class='rowDropStart' style='grid-column: span 12;'>
+            <div class='gridClass' style='grid-column-gap: 10px;'>
+              <div style='grid-column: span 4; cursor: not-allowed;'>
+                <input type="text" id="autoDrops1" style='pointer-events: none;' oninput="updateInputValue()">
+              </div>
+              <div style='grid-column: span 4;'>
+                <input type="text" id="autoDrops2" oninput="updateInputValue()">
+              </div>
+              <div style='grid-column: span 4;'>
+                <input type="text" id="autoDrops3" oninput="updateInputValue()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <style>
+/*icon introjs*/
+#introDropStart:hover {
+  background: #50bcac !important;
+}
+
+/*button*/
+#dropBttn {
+  background: #49a6de !important;
+  color: #fff !important;
+  outline: none;
+  border: 1px solid #020202 !important;
+  width: 50px;
+  height: 50px;
+}
+
+#dropBttn:focus {
+  outline: none;
+}
+
+#dropBttn:after {
+  background: #91db95;
+}
+
+#dropBttn:before {
+  background: #66e36e;
+}
+
+/*dropdown*/
 #dropdownStart {
   position: absolute;
   background-color: #fafac0;
   color: #242832;
-  border: 2px solid #008cba;
+  border: 2px solid #49a6de;
   box-shadow: 0 0 10px 2px #afe0da;
-  margin-top: 55px;
-  width: 750px;
+  margin-top: 10px;
+  width: 900px;
   height: 415px;
   border-radius: 5px;
   padding: 5px;
@@ -37,50 +112,145 @@
 
 #dropdownStart:after {
   content: "";
-  position: relative;
-  top: -20px;
+  position: absolute;
   width: 98%;
   height: 40px;
-  display: block;
   background-color: #49a6de;
   border: 1px solid #858383;
   border-radius: 3px;
-  margin: auto;
   z-index: 1;
+  margin: 0 auto 0 auto;
+  inset: 8px 0 0 0;
 }
 
-@-webkit-keyframes fa-spin{
-  0%{-webkit-transform:rotate(0deg);
-  transform:rotate(0deg)}100%{-webkit-transform:rotate(359deg);
-  transform:rotate(359deg)}
+.labelDropStart {
+  font-size: 13px;
 }
 
-@keyframes fa-spin{
-  0%{-webkit-transform:rotate(0deg);
-  transform:rotate(0deg)}100%{-webkit-transform:rotate(359deg);
-  transform:rotate(359deg)}
+.iColor {
+  color: #49a6de;
+}
+
+.labelDropStart {
+  height: 0;
+  margin: 30px 10px -100% 10px;
+}
+
+.rowDropStart {
+  margin: 50px 10px 0 10px;
+}
+
+[id^="autoDrops"] {
+  width: 100%;
+  border-radius: 4px;
+  border: 2px solid #858383;
+  background-color: #fafac0;
+  outline: 1px solid #bababa;
+  outline-offset: -4px;
+  text-align: center;
+}
+
+#autoDrops1 {
+  background-color: #afe0da !important;
+  border-color: #40bcac !important;
+  color: #020202 !important;
+}
+
+/*tippy intro js*/
+.tippy-box[data-theme~='dropIntroTheme'] {
+  background-color: #bababa;
+  color: #020202;
+  outline-offset: -2px;
+  outline: 1px solid #020202;
+  width: 225px;
+}
+
+.tippy-box[data-theme~='dropIntroTheme'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: #020202;
 }
 </style>
 
 <script>
+// tippy introjs dropdown
+$(document).ready(function() {
+  function updateDropTippy1 (dropIntroContentUse) {
+    tippy("#introDropStart", {
+    allowHTML: true,
+    content: dropIntroContentUse,
+    placement: "right",
+    arrow: true,
+    followCursor: false,
+    theme: 'dropIntroTheme',
+    trigger: "click"
+    });
+  }
+  function updateDropTippy2 () {
+    const dropIntroContentUse = document.getElementById('dropIntroContentSpan').innerHTML;
+    updateDropTippy1(dropIntroContentUse);
+  };
+  $("#complexTranslation").on("click", function() {
+    updateDropTippy2();
+  });
+  updateDropTippy2();
+});
+
+// dropdown
 $(document).ready(function() {
   $('#dropBttn').on('click', function() {
     const clique = $(this).data('clique');
+    const dropBttn = document.getElementById('dropBttn');
+    const dropBtnDiv = document.getElementById('dropBtnDiv');
     if (clique) {
+      // change button
+      $(this).attr("style", 'background-color: #eb314a !important');
+      $(this).html("<i class='fas fa-xmark' style='font-size: 27px; margin-top: 0.24em;'></i>");
+      document.styleSheets[0].insertRule('#dropBttn:after { background: #ffb469; }', document.styleSheets[0]);
+      document.styleSheets[0].insertRule('#dropBttn:before { background: #ff8800; }', document.styleSheets[0]);
+      // Set interval to add style
+      const interval = setInterval(function() {
+        dropBttn.style.pointerEvents = 'none';
+        dropBtnDiv.style.cursor = 'not-allowed';
+      });
+      // Clear the interval
+      setTimeout(function() {
+        clearInterval(interval);
+        dropBttn.style.pointerEvents = 'auto';
+        dropBtnDiv.style.cursor = 'inherit';
+      }, 2000);
       // open menu
       $("#dropdownStart")
+        .removeClass('animate__animated animate__bounceOutLeft')
         .addClass('animate__animated animate__bounceInLeft')
         .show()
+        .css('animation-duration', '1200ms')
         .animate({
           opacity: '1'
-        }, 1000);
+        }, 1200);
     } else {
+      // change button
+      $(this).attr("style", 'background-color: #49a6de !important');
+      $(this).html("<i class='fas fa-sliders' style='font-size: 27px; margin-top: 0.2em; margin-left: -.06em;'></i>");
+      document.styleSheets[0].insertRule('#dropBttn:after { background: #91db95; }', document.styleSheets[0]);
+      document.styleSheets[0].insertRule('#dropBttn:before { background: #66e36e; }', document.styleSheets[0]);
+      // Set interval to add style
+      const interval = setInterval(function() {
+        dropBttn.style.pointerEvents = 'none';
+        dropBtnDiv.style.cursor = 'not-allowed';
+      });
+      // Clear the interval
+      setTimeout(function() {
+        clearInterval(interval);
+        dropBttn.style.pointerEvents = 'auto';
+        dropBtnDiv.style.cursor = 'inherit';
+      }, 2000);
       // close menu
       $("#dropdownStart")
+        .removeClass('animate__animated animate__bounceInLeft')
         .addClass('animate__animated animate__bounceOutLeft')
+        .css('animation-duration', '1200ms')
         .animate({
           opacity: '0'
-        }, 1000, function() {
+        }, 1200, function() {
           $(this).hide();
           $(this).removeClass('animate__animated animate__bounceOutLeft');
         });
@@ -88,4 +258,36 @@ $(document).ready(function() {
     $(this).data('clique', !clique);
   });
 });
+
+// inputs
+function updateInputValue() {
+  var inputs = document.querySelectorAll("[id^='autoDrops']");
+  var prefix = "R$";
+
+  inputs.forEach((input, index) => {
+    if (index !== 0) { // Exclui o primeiro elemento
+      var value = input.value;
+
+      // Remove caracteres não numéricos
+      value = value.replace(/\D/g, '');
+
+      if (value !== "") {
+        // Divide por 100 para ajustar os decimais
+        var number = parseFloat(value) / 100;
+
+        // Formata o valor com separador de milhar e decimais
+        value = number.toLocaleString('pt-BR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+        value = prefix + " " + value.replace('.', '.');
+      }
+
+      input.value = value;
+    }
+  });
+}
+
+// Chama a função para atualizar os valores dos inputs
+updateInputValue();
 </script>

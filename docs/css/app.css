@@ -21,40 +21,46 @@ p, span, strong, h1, h2, h3, h4, h5, h6, button, div {
 
 .gridTwelve {
   grid-column: span 12;
+  position: relative;
 }
 
 .elementNone {
   display: none;
 }
 
+/*modal title*/
+.modal-header {
+  background-color: #49a6de;
+  padding: 12px;
+  border-radius: 8px 8px 0 0;
+}
+
+.modal-title {
+  display: block;
+  margin: auto;
+  font-size: 27px;
+  color: #fafac0;
+}
+
+.modal-content {
+  border-radius: 12px 12px 4px 4px;
+  background-color: #fafac0;
+}
+
+/*i18n buttons*/
+.i18nBttnClass {
+  border-radius: 10px;
+  box-shadow: 1px 1px #333;
+  background-color: #54cede;
+  color: #020202;
+}
+
+.i18nBttnClass:active {
+  background-color: #ffa500 !important;
+}
+
 /*dropdown menu*/
 .dropdownHidden {
   display: none;
   opacity: 0;
-}
-
-.bttn-unite.bttn-royal {
-  background: #008cba !important;
-  color: #fff !important;
-  outline: none;
-  border: 1px solid #020202 !important;
-  width: 50px;
-  height: 50px;
-}
-
-.bttn-unite.bttn-royal:focus {
-  outline: none;
-}
-
-.bttn-unite:after {
-  background: lightblue !important;
-}
-
-.bttn-unite:before {
-  background: #49a6de !important;
-}
-
-/*rotate gear*/
-.fas.fa-gear, .fas.fa-arrows-rotate {
-  animation: fa-spin 2s infinite linear;
 }
